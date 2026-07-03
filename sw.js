@@ -1,9 +1,11 @@
-const CACHE_NAME = 'mahabharata-v1';
+const CACHE_NAME = 'mahabharata-v2';
 const ASSETS = [
   './',
-  './mahabharata.html',
+  './index.html',
   './manifest.json',
   './icon.svg',
+  './icon-192.png',
+  './icon-512.png',
   'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap'
 ];
 
@@ -32,7 +34,7 @@ self.addEventListener('fetch', event => {
         return response;
       }).catch(() => {
         if (event.request.destination === 'document') {
-          return caches.match('./mahabharata.html');
+          return caches.match('./index.html');
         }
       });
     })
