@@ -9,11 +9,7 @@
   "orientation": "portrait",
   "background_color": "#F8F5F0",
   "theme_color": "#C84B31",
-  "categories": [
-    "education",
-    "books",
-    "entertainment"
-  ],
+  "categories": ["education", "books", "entertainment"],
   "lang": "en",
   "icons": [
     {
