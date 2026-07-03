@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Mahābhārata — The Living Epic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+:root {
+  --saffron: #C4560A;
+  --saffron-light: #E8893F;
+  --saffron-glow: #F4A94D;
+  --gold: #B8860B;
+  --gold-light: #D4A824;
+  --gold-pale: #F0E6C8;
+  --indigo: #1B3A5C;
+  --indigo-deep: #0F2440;
+  --indigo-light: #2A5580;
+  --ivory: #F5F0E8;
+  --ivory-warm: #FAF6EE;
+  --parchment: #EDE4D3;
+  --blood: #8B2E2E;
+  --blood-light: #B54444;
+  --sacred-green: #2D5F4A;
+  --sacred-green-light: #3D8066;
+  --purple: #4A2D6B;
+  --purple-light: #6B4D8A;
+  --text-dark: #2A1F14;
+  --text-mid: #5C4A3A;
+  --text-light: #8A7A6A;
+  --border-light: #DDD5C8;
+  --shadow: rgba(42,31,20,0.08);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-sanskrit: 'Tiro Devanagari Hindi', serif;
+  --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --nav-height: 64px;
+}
+
+[data-theme="dark"] {
+  --ivory: #0F1A2A;
+  --ivory-warm: #0A1220;
+  --parchment: #162234;
+  --text-dark: #E8E0D4;
+  --text-mid: #B0A494;
+  --text-light: #7A7068;
+  --border-light: #2A3A4E;
+  --shadow: rgba(0,0,0,0.3);
+  --gold-pale: #1E2A1A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { 
+  height: 100%; 
+  overflow: hidden;
+  background: var(--ivory);
+  color: var(--text-dark);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ APP SHELL ============ */
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top bar */
+.top-bar {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--ivory);
+  border-bottom: 0.5px solid var(--border-light);
+  z-index: 100;
+  flex-shrink: 0;
+  position: relative;
+}
+.top-bar.transparent { background: transparent; border: none; position: absolute; top: 0; left: 0; right: 0; z-index: 200; }
+.top-bar-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--text-dark); }
+.top-bar-btn { background: none; border: none; font-size: 20px; color: var(--text-mid); cursor: pointer; padding: 8px; border-radius: 50%; }
+.top-bar-btn:active { background: var(--parchment); }
+.back-btn { display: none; }
+.back-btn.visible { display: block; }
+
+/* Page container */
+.page-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.page {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  scrollbar-width: none;
+}
+.page::-webkit-scrollbar { display: none; }
+.page.active { opacity: 1; transform: translateX(0); z-index: 10; }
+.page.exit { opacity: 0; transform: translateX(-30px); }
+
+/* Bottom nav */
+.bottom-nav {
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: var(--ivory-warm);
+  border-top: 0.5px solid var(--border-light);
+  flex-shrink: 0;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  color: var(--text-light);
+  transition: color 0.2s;
+  font-family: var(--font-body);
+}
+.nav-item.active { color: var(--saffron); }
+.nav-item svg { width: 22px; height: 22px; }
+.nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.02em; }
+
+/* ============ SHARED COMPONENTS ============ */
+.section-header {
+  padding: 24px 20px 12px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.section-sub {
+  padding: 0 20px 16px;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+.pill-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 16px;
+}
+.pill-row::-webkit-scrollbar { display: none; }
+.pill {
+  flex-shrink: 0;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border-light);
+  background: var(--ivory-warm);
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+.pill.active { background: var(--saffron); color: #fff; border-color: var(--saffron); }
+
+.card {
+  background: var(--ivory-warm);
+  border: 0.5px solid var(--border-light);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 20px 12px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.card:active { transform: scale(0.98); }
+
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.tag-pandava { background: #E3F0FF; color: #1B5FAA; }
+.tag-kaurava { background: #FFE8E3; color: #8B2E2E; }
+.tag-divine { background: #FFF3D6; color: #8B6B0B; }
+.tag-neutral { background: #E8F5E8; color: #2D5F4A; }
+.tag-sage { background: #F0E6FF; color: #4A2D6B; }
+
+[data-theme="dark"] .tag-pandava { background: #1B3050; color: #6BA8E8; }
+[data-theme="dark"] .tag-kaurava { background: #3A1A1A; color: #E88A7A; }
+[data-theme="dark"] .tag-divine { background: #2A2410; color: #D4A824; }
+[data-theme="dark"] .tag-neutral { background: #1A2E22; color: #5DB87A; }
+[data-theme="dark"] .tag-sage { background: #2A1A3A; color: #A87AE0; }
+
+/* ============ HOME SCREEN ============ */
+.home-hero {
+  position: relative;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--indigo-deep) 0%, var(--indigo) 60%, var(--saffron) 100%);
+}
+.home-hero svg.yantra {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px; height: 320px;
+  opacity: 0.12;
+  animation: rotateYantra 120s linear infinite;
+}
+@keyframes rotateYantra { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .home-hero svg.yantra { animation: none; } }
+.home-title-wrap { position: relative; z-index: 2; text-align: center; padding: 0 30px; }
+.home-sanskrit {
+  font-family: var(--font-sanskrit);
+  font-size: 28px;
+  color: var(--gold-light);
+  margin-bottom: 6px;
+  opacity: 0;
+  animation: fadeUp 1s 0.3s ease forwards;
+}
+.home-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: fadeUp 1s 0.6s ease forwards;
+}
+.home-subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  animation: fadeUp 1s 0.9s ease forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.home-stats {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 24px;
+  margin-top: 32px;
+  opacity: 0;
+  animation: fadeUp 1s 1.2s ease forwards;
+}
+.home-stat { text-align: center; }
+.home-stat-num { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--gold-light); }
+.home-stat-label { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+.home-content { padding-bottom: 24px; }
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+.home-grid-item {
+  background: var(--ivory-warm);
+  border: 0.5px solid var(--border-light);
+  border-radius: 14px;
+  padding: 18px 14px;
+  cursor: pointer;
+  transition: transform 0.15s;
+  text-align: center;
+}
+.home-grid-item:active { transform: scale(0.96); }
+.home-grid-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+.home-grid-label { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--text-dark); }
+.home-grid-desc { font-size: 11px; color: var(--text-light); margin-top: 4px; line-height: 1.4; }
+
+.home-featured {
+  margin: 0 20px 16px;
+  background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-deep) 100%);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.home-featured:active { transform: scale(0.98); }
+.home-featured-eyebrow { font-size: 10px; color: var(--gold-light); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+.home-featured-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: #fff; margin: 6px 0; }
+.home-featured-desc { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+.home-featured-cta { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--gold-light); }
+
+/* ============ CHARACTERS ============ */
+.char-card {
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.char-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.char-info { flex: 1; min-width: 0; }
+.char-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text-dark); }
+.char-title { font-size: 12px; color: var(--text-light); margin: 2px 0 6px; }
+.char-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Character detail */
+.char-detail-hero {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.char-detail-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 700;
+  color: #fff;
+  border: 3px solid var(--ivory);
+}
+.char-detail-name { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: #fff; margin-top: 10px; }
+.char-detail-epithet { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.char-detail-body { padding: 20px; }
+.char-detail-section { margin-bottom: 20px; }
+.char-detail-section h3 { font-family: var(--font-display); font-size: 17px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+.char-detail-section p { font-size: 13px; color: var(--text-mid); line-height: 1.7; }
+.stat-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.stat-item { 
+  flex: 1; min-width: 80px;
+  background: var(--parchment);
+  border-radius: 10px; 
+  padding: 10px; 
+  text-align: center;
+}
+.stat-val { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--saffron); }
+.stat-label { font-size: 10px; color: var(--text-light); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ============ PARVAS TIMELINE ============ */
+.parva-card {
+  position: relative;
+  padding-left: 32px;
+}
+.parva-card::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: -12px;
+  width: 1.5px;
+  background: var(--border-light);
+}
+.parva-card:last-child::before { display: none; }
+.parva-dot {
+  position: absolute;
+  left: 2px; top: 18px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--saffron);
+  border: 2px solid var(--ivory-warm);
+}
+.parva-num { font-family: var(--font-display); font-size: 12px; color: var(--saffron); font-weight: 700; margin-bottom: 2px; }
+.parva-name { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--text-dark); }
+.parva-meaning { font-size: 12px; color: var(--text-light); font-style: italic; margin: 2px 0 6px; }
+.parva-desc { font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+.parva-meta { display: flex; gap: 16px; margin-top: 8px; }
+.parva-meta span { font-size: 11px; color: var(--text-light); }
+
+/* ============ WAR MAP ============ */
+.war-day-selector {
+  display: flex;
+  gap: 0;
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-bottom: 16px;
+}
+.war-day-selector::-webkit-scrollbar { display: none; }
+.war-day {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  border: 1.5px solid var(--border-light);
+  background: var(--ivory-warm);
+  color: var(--text-mid);
+  cursor: pointer;
+  margin-right: 6px;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+.war-day.active { background: var(--blood); color: #fff; border-color: var(--blood); }
+.war-day.death { border-color: var(--blood-light); }
+
+.war-event {
+  margin: 0 20px 14px;
+  padding: 14px;
+  background: var(--ivory-warm);
+  border-left: 3px solid var(--blood);
+  border-radius: 0 12px 12px 0;
+}
+.war-event-time { font-size: 10px; color: var(--blood); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.war-event-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; margin: 4px 0; color: var(--text-dark); }
+.war-event-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+.army-bar {
+  margin: 0 20px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.army-label { font-size: 11px; font-weight: 600; width: 70px; flex-shrink: 0; }
+.army-label.pandava { color: var(--indigo); }
+.army-label.kaurava { color: var(--blood); }
+.army-track { flex: 1; height: 10px; background: var(--parchment); border-radius: 5px; overflow: hidden; }
+.army-fill { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+.army-fill.pandava { background: linear-gradient(90deg, var(--indigo), var(--indigo-light)); }
+.army-fill.kaurava { background: linear-gradient(90deg, var(--blood), var(--blood-light)); }
+.army-pct { font-size: 11px; color: var(--text-light); width: 35px; text-align: right; }
+
+/* ============ GITA ============ */
+.gita-chapter {
+  margin: 0 20px 12px;
+  padding: 16px;
+  background: var(--ivory-warm);
+  border: 0.5px solid var(--border-light);
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: transform 0.15s;
+}
+.gita-chapter:active { transform: scale(0.98); }
+.gita-num {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--saffron);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  flex-shrink: 0;
+}
+.gita-ch-name { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--text-dark); }
+.gita-ch-sanskrit { font-family: var(--font-sanskrit); font-size: 13px; color: var(--saffron); margin: 2px 0; }
+.gita-ch-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+.gita-ch-verses { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+
+/* ============ DICE GAME ============ */
+.dice-scene {
+  min-height: 100%;
+  background: linear-gradient(180deg, #1a0e08 0%, #2a1a10 50%, #1a0e08 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 24px 40px;
+}
+.dice-atmosphere { font-size: 13px; color: #8a6a4a; text-align: center; line-height: 1.7; font-style: italic; margin-bottom: 24px; font-family: var(--font-display); }
+.dice-stakes {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(184,134,11,0.3);
+  border-radius: 14px;
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.dice-round-label { font-size: 10px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+.dice-stakes-text { font-family: var(--font-display); font-size: 22px; color: #E8D5B0; font-weight: 600; margin: 8px 0; }
+.dice-stakes-sub { font-size: 12px; color: #8a6a4a; }
+.dice-area {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+}
+.die {
+  width: 60px; height: 60px;
+  background: #F5E6C8;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 700;
+  color: #2a1a10;
+  font-family: var(--font-display);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.3s;
+}
+.die.rolling { animation: diceRoll 0.4s ease; }
+@keyframes diceRoll {
+  0% { transform: rotateX(0) scale(1); }
+  50% { transform: rotateX(180deg) scale(1.1); }
+  100% { transform: rotateX(360deg) scale(1); }
+}
+.dice-btn {
+  padding: 14px 40px;
+  background: var(--gold);
+  color: #1a0e08;
+  border: none;
+  border-radius: 30px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.2s;
+}
+.dice-btn:active { transform: scale(0.96); }
+.dice-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.dice-dialogue {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255,255,255,0.03);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  width: 100%;
+}
+.dice-speaker { font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.dice-quote { font-family: var(--font-display); font-size: 15px; color: #C8B898; line-height: 1.6; margin-top: 6px; font-style: italic; }
+.dice-lost-list { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.dice-lost-item { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; background: rgba(139,46,46,0.3); color: #E08A7A; }
+
+/* ============ ASTRAS ============ */
+.astra-card {
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.astra-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.astra-name { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text-dark); }
+.astra-origin { font-size: 11px; color: var(--gold); font-weight: 500; margin: 2px 0 4px; }
+.astra-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+.astra-tier {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.tier-supreme { background: #FFE8A0; color: #6B4D00; }
+.tier-divine { background: #E3D4FF; color: #3A1F6B; }
+.tier-celestial { background: #D4EFFF; color: #1A4A6B; }
+
+[data-theme="dark"] .tier-supreme { background: #3A2E10; color: #FFD466; }
+[data-theme="dark"] .tier-divine { background: #2A1A3A; color: #B89AE0; }
+[data-theme="dark"] .tier-celestial { background: #1A2A3A; color: #7AB8E0; }
+
+/* ============ DAILY SHLOKA ============ */
+.shloka-card {
+  margin: 0 20px;
+  background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-deep) 100%);
+  border-radius: 18px;
+  padding: 28px 22px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.shloka-card::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(184,134,11,0.08);
+}
+.shloka-day { font-size: 10px; color: var(--gold-light); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+.shloka-sanskrit { font-family: var(--font-sanskrit); font-size: 22px; color: var(--gold-light); margin: 16px 0; line-height: 1.5; }
+.shloka-trans { font-family: var(--font-display); font-size: 15px; color: rgba(255,255,255,0.8); line-height: 1.6; font-style: italic; margin-bottom: 16px; }
+.shloka-source { font-size: 11px; color: rgba(255,255,255,0.4); }
+.shloka-share-btn {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 24px;
+  color: var(--gold-light);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+/* ============ QUIZ ============ */
+.quiz-header {
+  text-align: center;
+  padding: 24px 20px;
+}
+.quiz-progress { display: flex; gap: 4px; justify-content: center; margin-bottom: 16px; }
+.quiz-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-light); }
+.quiz-dot.correct { background: var(--sacred-green); }
+.quiz-dot.wrong { background: var(--blood); }
+.quiz-dot.current { background: var(--saffron); transform: scale(1.3); }
+.quiz-score { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--saffron); }
+.quiz-question-card {
+  margin: 0 20px;
+  background: var(--ivory-warm);
+  border: 0.5px solid var(--border-light);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+}
+.quiz-category { font-size: 10px; color: var(--saffron); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+.quiz-question { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--text-dark); line-height: 1.4; }
+.quiz-options { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  padding: 14px 16px;
+  background: var(--ivory-warm);
+  border: 1.5px solid var(--border-light);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+  text-align: left;
+  width: 100%;
+}
+.quiz-option:active { transform: scale(0.98); }
+.quiz-option.correct { background: #E8F5E8; border-color: var(--sacred-green); color: var(--sacred-green); }
+.quiz-option.wrong { background: #FFE8E3; border-color: var(--blood); color: var(--blood); }
+[data-theme="dark"] .quiz-option.correct { background: #1A2E22; }
+[data-theme="dark"] .quiz-option.wrong { background: #2E1A1A; }
+.quiz-explanation {
+  margin: 16px 20px;
+  padding: 14px;
+  background: var(--parchment);
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  display: none;
+}
+.quiz-explanation.visible { display: block; }
+.quiz-next-btn {
+  display: block;
+  margin: 16px auto;
+  padding: 12px 32px;
+  background: var(--saffron);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  display: none;
+}
+.quiz-next-btn.visible { display: block; }
+
+/* ============ SEARCH ============ */
+.search-wrap {
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  background: var(--ivory);
+  z-index: 50;
+}
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  background: var(--ivory-warm);
+  font-size: 14px;
+  color: var(--text-dark);
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--saffron); }
+.search-icon {
+  position: absolute;
+  left: 34px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  font-size: 16px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 0; }
+
+/* Loading shimmer */
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top-bar" id="topBar">
+    <button class="top-bar-btn back-btn" id="backBtn" onclick="goBack()">←</button>
+    <span class="top-bar-title" id="topTitle"></span>
+    <button class="top-bar-btn" id="themeBtn" onclick="toggleTheme()">☀</button>
+  </div>
+  <div class="page-container" id="pageContainer"></div>
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" onclick="navigate('home')" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" onclick="navigate('characters')" data-page="characters">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      <span class="nav-label">Characters</span>
+    </button>
+    <button class="nav-item" onclick="navigate('parvas')" data-page="parvas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      <span class="nav-label">Parvas</span>
+    </button>
+    <button class="nav-item" onclick="navigate('war')" data-page="war">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 7l6-6 4 4-6 6M3 3l18 18"/></svg>
+      <span class="nav-label">War</span>
+    </button>
+    <button class="nav-item" onclick="navigate('more')" data-page="more">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      <span class="nav-label">More</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const CHARACTERS = [
+  { id:'arjuna', name:'Arjuna', sanskrit:'अर्जुन', epithet:'Dhananjaya, Partha, Savyasachi', faction:'pandava', color:'#1B5FAA', parents:'Kunti & Indra (divine)', guru:'Drona, Parashurama', weapons:['Gandiva','Pashupatastra','Brahmashira'], bio:'The third Pandava and the greatest archer of his age. Son of Indra by Kunti. His skill with the bow was unmatched — he could shoot in complete darkness, fight ambidextrously, and wield celestial weapons. His bond with Krishna forms the emotional and philosophical core of the epic.', keyMoments:['Won Draupadi at her swayamvara','Obtained Pashupatastra from Shiva','Burned the Khandava forest with Krishna','Hesitated before the war, leading to the Bhagavad Gita','Killed Karna on Day 17'], skills:{archery:10,mace:6,sword:7,astra:9,strategy:7,chariot:9} },
+  { id:'karna', name:'Karna', sanskrit:'कर्ण', epithet:'Radheya, Vasusena, Angaraja', faction:'kaurava', color:'#C4560A', parents:'Kunti & Surya (divine)', guru:'Parashurama, Drona', weapons:['Vijaya bow','Shakti of Indra','Bhargavastra'], bio:'Born to Kunti and the Sun god before her marriage, abandoned at birth, raised by a charioteer. The greatest tragic hero of the epic — blessed with divine armor (Kavach-Kundal), cursed by his teacher, betrayed by fate at every turn, yet never wavering in his loyalty to Duryodhana.', keyMoments:['Humiliated at the tournament for his caste','Befriended by Duryodhana','Gave away his divine armor to Indra','Used Shakti on Ghatotkacha instead of Arjuna','Killed by Arjuna when his chariot wheel sank'], skills:{archery:10,mace:7,sword:6,astra:8,strategy:6,chariot:8} },
+  { id:'krishna', name:'Krishna', sanskrit:'कृष्ण', epithet:'Vasudeva, Govinda, Keshava', faction:'divine', color:'#1B3A5C', parents:'Devaki & Vasudeva', guru:'Sandipani', weapons:['Sudarshana Chakra','Kaumodaki mace'], bio:'The eighth avatar of Vishnu, king of Dwaraka, and the supreme strategist behind the Pandava victory. Chose to be Arjuna\'s charioteer rather than fight, yet his counsel shaped every critical decision. His discourse to Arjuna on the battlefield became the Bhagavad Gita.', keyMoments:['Failed peace mission to Hastinapura','Revealed his Vishvarupa to Arjuna','Protected Arjuna throughout the war','Orchestrated Jayadratha\'s death via solar eclipse','Cursed by Gandhari after the war'], skills:{archery:8,mace:9,sword:7,astra:10,strategy:10,chariot:10} },
+  { id:'bhishma', name:'Bhishma', sanskrit:'भीष्म', epithet:'Devavrata, Gangaputra, Pitamaha', faction:'neutral', color:'#2D5F4A', parents:'Shantanu & Ganga', guru:'Parashurama, Brihaspati', weapons:['Prabhasa bow','All celestial astras'], bio:'The grandsire of both Pandavas and Kauravas. Took the terrible oath of lifelong celibacy so his father could marry Satyavati. Blessed with the power to choose his time of death (Iccha Mrityu). Perhaps the most powerful warrior on the Kurukshetra field, yet fought with deliberate restraint.', keyMoments:['Took the oath of celibacy — the terrible vow','Abducted Amba, Ambika, Ambalika','Fought for 10 days as Kaurava commander','Revealed to the Pandavas how to defeat him','Fell on the bed of arrows, waited for Uttarayana'], skills:{archery:9,mace:8,sword:9,astra:10,strategy:9,chariot:9} },
+  { id:'draupadi', name:'Draupadi', sanskrit:'द्रौपदी', epithet:'Panchali, Krishnaa, Yajnaseni', faction:'pandava', color:'#8B2E2E', parents:'King Drupada (born from fire)', guru:'-', weapons:[], bio:'Born from a sacrificial fire, married to all five Pandavas, and the woman whose humiliation in the Kaurava court set the entire war in motion. Her question — "Did Yudhishthira have the right to stake me after he had lost himself?" — remains one of the deepest dharmic puzzles of the epic.', keyMoments:['Born from the sacred fire','Married all five Pandavas','Humiliated in the court — the disrobing','Took a vow to leave her hair unbound until washed in Duhshasana\'s blood','Her hair was finally bound after the war'], skills:{archery:2,mace:1,sword:1,astra:0,strategy:8,chariot:2} },
+  { id:'yudhishthira', name:'Yudhishthira', sanskrit:'युधिष्ठिर', epithet:'Dharmaraja, Ajatashatru', faction:'pandava', color:'#4A2D6B', parents:'Kunti & Dharma (divine)', guru:'Drona', weapons:['Spear of Dharma'], bio:'The eldest Pandava, son of the god Dharma himself. Known for his unwavering commitment to truth and righteousness — his chariot floated above the ground because he had never told a lie. Yet his gambling addiction led to the loss of everything, and his single lie ("Ashwatthama hathi") caused his chariot to touch earth.', keyMoments:['Lost everything in the dice game','Answered the Yaksha\'s riddles to save his brothers','Ruled incognito as a Brahmin in Virata','Told the half-lie about Ashwatthama','Was the only Pandava to reach heaven in mortal form'], skills:{archery:6,mace:5,sword:5,astra:6,strategy:8,chariot:5} },
+  { id:'bhima', name:'Bhima', sanskrit:'भीम', epithet:'Vrikodara, Bhimasena', faction:'pandava', color:'#6B4D00', parents:'Kunti & Vayu (divine)', guru:'Drona, Balarama (mace)', weapons:['Mace','Bare hands'], bio:'The second Pandava, son of the wind god Vayu, possessing the strength of ten thousand elephants. The most physically powerful warrior in the epic. His rage was legendary — he swore to drink Duhshasana\'s blood and break Duryodhana\'s thigh, and he fulfilled both vows.', keyMoments:['Killed the demon Hidimba and married Hidimbi','Killed Bakasura','Swore to avenge Draupadi\'s humiliation','Killed all 100 Kauravas in the war','Broke Duryodhana\'s thigh in the final mace duel'], skills:{archery:4,mace:10,sword:6,astra:3,strategy:5,chariot:4} },
+  { id:'drona', name:'Drona', sanskrit:'द्रोण', epithet:'Dronacharya, Bharadwaja\'s son', faction:'kaurava', color:'#5C4A3A', parents:'Sage Bharadwaja', guru:'Parashurama', weapons:['Brahmastra','Brahmashira','All astras'], bio:'The supreme teacher of martial arts to both Pandavas and Kauravas. A Brahmin warrior of unparalleled skill who commanded the Kaurava army after Bhishma fell. His attachment to his son Ashwatthama was his only vulnerability — and the Pandavas exploited it.', keyMoments:['Demanded Ekalavya\'s thumb as guru-dakshina','Trained both Pandavas and Kauravas','Became Kaurava commander on Day 11','Created the Chakravyuha that killed Abhimanyu','Laid down arms when told Ashwatthama was dead'], skills:{archery:9,mace:6,sword:7,astra:10,strategy:8,chariot:7} },
+  { id:'duryodhana', name:'Duryodhana', sanskrit:'दुर्योधन', epithet:'Suyodhana, King of Hastinapura', faction:'kaurava', color:'#8B2E2E', parents:'Dhritarashtra & Gandhari', guru:'Drona, Balarama (mace)', weapons:['Mace'], bio:'The eldest of the 100 Kauravas and the primary antagonist — though the epic complicates that label. A generous king to his allies, a fierce mace fighter trained by Balarama himself, and a man consumed by envy of his cousins. His friendship with Karna was genuine and unwavering.', keyMoments:['Poisoned young Bhima','Orchestrated the dice game with Shakuni','Refused to give even five villages for peace','Led the Kaurava cause through the entire war','Died after Bhima broke his thigh — the last Kaurava'], skills:{archery:5,mace:9,sword:6,astra:4,strategy:6,chariot:5} },
+  { id:'abhimanyu', name:'Abhimanyu', sanskrit:'अभिमन्यु', epithet:'Son of Arjuna', faction:'pandava', color:'#2A5580', parents:'Arjuna & Subhadra', guru:'Arjuna, Krishna', weapons:['Bow','Sword','Chariot wheel'], bio:'The young son of Arjuna and Subhadra, nephew of Krishna. Learned the secret of entering the Chakravyuha while still in his mother\'s womb but never learned how to exit it. His death at age 16 — surrounded and killed by six maharathis violating the rules of war — is the epic\'s most heartbreaking moment.', keyMoments:['Learned Chakravyuha entry in the womb','Entered the Chakravyuha on Day 13','Fought six maharathis alone','Killed using a chariot wheel after his weapons broke','His death turned Arjuna into an unstoppable force'], skills:{archery:8,mace:5,sword:7,astra:6,strategy:5,chariot:7} },
+];
+
+const PARVAS = [
+  { num:1, name:'Adi Parva', meaning:'The Book of the Beginning', chapters:236, verses:8884, desc:'The origins of the Kuru dynasty, births of the Pandavas and Kauravas, the house of lac, Draupadi\'s swayamvara, and the division of the Kuru kingdom.', key:'Origin of the epic, Shantanu to Pandava youth' },
+  { num:2, name:'Sabha Parva', meaning:'The Book of the Assembly Hall', chapters:81, verses:2511, desc:'The building of the Pandavas\' magnificent court at Indraprastha, the Rajasuya sacrifice, and the devastating dice game that stripped them of everything.', key:'Dice game, Draupadi\'s humiliation' },
+  { num:3, name:'Vana Parva', meaning:'The Book of the Forest', chapters:315, verses:11664, desc:'The thirteen years of exile. Contains some of the most beloved sub-stories — Nala-Damayanti, Savitri-Satyavan, and the Yaksha Prashna.', key:'Exile years, great sub-stories' },
+  { num:4, name:'Virata Parva', meaning:'The Book of Virata', chapters:72, verses:2050, desc:'The year of living incognito in King Virata\'s court. Yudhishthira as a Brahmin, Bhima as a cook, Arjuna as the dance teacher Brihannala, Draupadi as a handmaid.', key:'Incognito year, Arjuna reveals identity' },
+  { num:5, name:'Udyoga Parva', meaning:'The Book of Effort', chapters:199, verses:6698, desc:'Preparations for war. Krishna\'s peace mission fails. Armies are assembled. Karna learns his true identity from Kunti and Krishna but refuses to switch sides.', key:'Failed peace, war preparations, Karna\'s choice' },
+  { num:6, name:'Bhishma Parva', meaning:'The Book of Bhishma', chapters:124, verses:5884, desc:'The first ten days of the war under Bhishma\'s command. Contains the Bhagavad Gita — Krishna\'s discourse to Arjuna on the battlefield.', key:'War begins, Bhagavad Gita, Bhishma falls' },
+  { num:7, name:'Drona Parva', meaning:'The Book of Drona', chapters:204, verses:8909, desc:'Days 11 to 15. Drona commands the Kaurava army. The Chakravyuha that kills Abhimanyu. Arjuna\'s oath to kill Jayadratha. The half-lie about Ashwatthama.', key:'Abhimanyu\'s death, Drona falls' },
+  { num:8, name:'Karna Parva', meaning:'The Book of Karna', chapters:96, verses:4964, desc:'Days 16 and 17. Karna takes command. The final confrontation between the two greatest archers — Karna and Arjuna. Every curse comes due.', key:'Karna vs Arjuna, Karna falls' },
+  { num:9, name:'Shalya Parva', meaning:'The Book of Shalya', chapters:65, verses:3220, desc:'Day 18 — the final day. Shalya commands briefly before falling. Duryodhana flees to a lake. Bhima finds him. The mace duel that ends the war.', key:'Final day, Duryodhana\'s fall' },
+  { num:10, name:'Sauptika Parva', meaning:'The Book of the Sleeping Warriors', chapters:18, verses:870, desc:'The darkest night. Ashwatthama, Kritavarma, and Kripa massacre the sleeping Pandava camp. Ashwatthama launches the Brahmastra at the unborn.', key:'Night massacre, Ashwatthama\'s rage' },
+  { num:11, name:'Stri Parva', meaning:'The Book of the Women', chapters:27, verses:775, desc:'The women of both sides walk the battlefield, mourning their dead. Gandhari curses Krishna. The emotional aftermath of total war.', key:'Gandhari\'s curse, mourning the dead' },
+  { num:12, name:'Shanti Parva', meaning:'The Book of Peace', chapters:365, verses:14732, desc:'The longest parva. Bhishma, on his bed of arrows, teaches Yudhishthira the principles of governance, dharma, law, philosophy, and the duties of a king.', key:'Bhishma\'s teachings on dharma and governance' },
+  { num:13, name:'Anushasana Parva', meaning:'The Book of Instructions', chapters:168, verses:8000, desc:'Continuation of Bhishma\'s teachings. Covers duties, charity, conduct, the nature of truth, and the paths to liberation. Bhishma finally departs.', key:'Bhishma\'s final teachings and death' },
+  { num:14, name:'Ashvamedhika Parva', meaning:'The Book of the Horse Sacrifice', chapters:96, verses:3320, desc:'Yudhishthira performs the Ashvamedha to consolidate his rule. Arjuna follows the horse. Contains the Anu Gita — Krishna\'s second discourse.', key:'Horse sacrifice, Anu Gita' },
+  { num:15, name:'Ashramvasika Parva', meaning:'The Book of the Hermitage', chapters:47, verses:1506, desc:'Dhritarashtra, Gandhari, and Kunti retire to the forest. A forest fire claims their lives. The old generation passes.', key:'Elder\'s retirement and death' },
+  { num:16, name:'Mausala Parva', meaning:'The Book of the Clubs', chapters:9, verses:320, desc:'The Yadava clan destroys itself in a drunken brawl with iron clubs, fulfilling the sages\' curse. Balarama departs. Krishna is killed by a hunter\'s arrow.', key:'Yadava destruction, Krishna\'s death' },
+  { num:17, name:'Mahaprasthanika Parva', meaning:'The Book of the Great Journey', chapters:3, verses:120, desc:'The Pandavas and Draupadi renounce the world and walk toward Mount Meru. One by one they fall. Only Yudhishthira and a dog remain.', key:'The final walk, companions fall' },
+  { num:18, name:'Svargarohana Parva', meaning:'The Book of the Ascent to Heaven', chapters:5, verses:200, desc:'Yudhishthira reaches heaven but finds his enemies there and his brothers in hell. His final test — and the revelation of the cosmic truth behind the entire epic.', key:'Heaven, final test, cosmic truth' },
+];
+
+const WAR_DAYS = [
+  { day:1, commander_p:'Dhrishtadyumna', commander_k:'Bhishma', formation_k:'Krauncha (Heron)', pandava_str:100, kaurava_str:100, events:[
+    { time:'Dawn', title:'The conch shells sound', desc:'Krishna blows the Panchajanya, Arjuna the Devadatta. The earth trembles as 18 Akshauhinis march.' },
+    { time:'Midday', title:'Bhishma\'s rampage', desc:'The grandsire cuts through Pandava ranks like wind through grass. No one can stand before him.' },
+    { time:'Dusk', title:'Stalemate', desc:'Heavy casualties on both sides. Arjuna and Bhishma exchange volleys. First day ends without decisive outcome.' }
+  ]},
+  { day:2, commander_p:'Dhrishtadyumna', commander_k:'Bhishma', formation_k:'Krauncha (Heron)', pandava_str:95, kaurava_str:96, events:[
+    { time:'Dawn', title:'Arjuna pushes through', desc:'Arjuna devastates the Kaurava right flank, sending soldiers fleeing in terror.' },
+    { time:'Midday', title:'Bhishma counters', desc:'Bhishma rallies his forces and launches a devastating counter-attack on the Pandava army.' },
+    { time:'Dusk', title:'Krishna\'s fury', desc:'Seeing Arjuna hesitate, Krishna leaps from the chariot with the Sudarshana Chakra, ready to fight Bhishma himself. Arjuna restrains him.' }
+  ]},
+  { day:13, commander_p:'Dhrishtadyumna', commander_k:'Drona', formation_k:'Chakravyuha (Spinning Wheel)', pandava_str:62, kaurava_str:58, events:[
+    { time:'Morning', title:'The Chakravyuha forms', desc:'Drona deploys the deadly spinning formation. Only Arjuna and Krishna know how to break it — but Arjuna is lured away by the Samshaptakas.' },
+    { time:'Midday', title:'Abhimanyu enters alone', desc:'The 16-year-old enters the spiral formation. Jayadratha seals the entrance behind him, trapping him inside alone.' },
+    { time:'Afternoon', title:'The murder of a boy', desc:'Six maharathis surround the disarmed boy. Karna strikes from behind. Abhimanyu fights with a chariot wheel before falling. The darkest hour of the war.' }
+  ]},
+  { day:14, commander_p:'Dhrishtadyumna', commander_k:'Drona', formation_k:'Shakata (Cart)', pandava_str:58, kaurava_str:52, events:[
+    { time:'Dawn', title:'Arjuna\'s terrible oath', desc:'"Before sunset tomorrow, I will kill Jayadratha — or I will walk into fire." Krishna sets the plan in motion.' },
+    { time:'Midday', title:'Fighting through the army', desc:'Arjuna carves through the entire Kaurava army seeking Jayadratha, who is hidden behind seven defensive formations.' },
+    { time:'Sunset', title:'Krishna\'s eclipse', desc:'Krishna creates an illusion of sunset. Jayadratha emerges in relief. The real sun reappears. Arjuna takes the shot. Head and body part.' }
+  ]},
+  { day:17, commander_p:'Dhrishtadyumna', commander_k:'Karna', formation_k:'Makara (Crocodile)', pandava_str:40, kaurava_str:32, events:[
+    { time:'Morning', title:'Karna takes command', desc:'The son of Surya rides out with the Vijaya bow. The army rallies behind the man they believe is their greatest champion.' },
+    { time:'Midday', title:'Every curse comes due', desc:'Karna\'s chariot wheel sinks into the earth (Prithvi\'s curse). He forgets his astras (Parashurama\'s curse). The Shakti is already spent on Ghatotkacha.' },
+    { time:'Dusk', title:'Karna falls', desc:'Arjuna\'s Anjalika arrow decapitates the greatest rival he ever faced. Krishna watches without mercy. The sun dims.' }
+  ]},
+  { day:18, commander_p:'Dhrishtadyumna', commander_k:'Shalya', formation_k:'Sarvatobhadra', pandava_str:32, kaurava_str:18, events:[
+    { time:'Morning', title:'The last dawn', desc:'Shalya leads what remains of the Kaurava army. Yudhishthira himself engages Shalya and kills him with a javelin.' },
+    { time:'Midday', title:'Duryodhana flees', desc:'The Kaurava army is destroyed. Duryodhana hides in a lake, using his yogic power to breathe underwater.' },
+    { time:'Dusk', title:'The mace duel', desc:'Bhima and Duryodhana face off. After hours of combat, Bhima strikes below the waist — an illegal blow. Duryodhana falls. The war is over.' }
+  ]}
+];
+
+const GITA_CHAPTERS = [
+  { num:1, name:'Arjuna Vishada Yoga', sanskrit:'अर्जुनविषादयोग', meaning:'The Yoga of Arjuna\'s Grief', verses:47, desc:'Arjuna surveys the battlefield and sees his teachers, grandfathers, and cousins on the opposing side. Overwhelmed by grief and moral conflict, he drops his bow and refuses to fight.' },
+  { num:2, name:'Sankhya Yoga', sanskrit:'सांख्ययोग', meaning:'The Yoga of Knowledge', verses:72, desc:'Krishna begins his teaching. The soul is eternal — it cannot be killed. You grieve for those who should not be grieved for. Do your duty as a warrior, detached from results.' },
+  { num:3, name:'Karma Yoga', sanskrit:'कर्मयोग', meaning:'The Yoga of Action', verses:43, desc:'Action is superior to inaction. Perform your duty without attachment to its fruits. The world is bound by action — unless that action is performed as sacrifice.' },
+  { num:4, name:'Jnana Karma Sanyasa Yoga', sanskrit:'ज्ञानकर्मसन्यासयोग', meaning:'The Yoga of Knowledge and Renunciation of Action', verses:42, desc:'Krishna reveals he has incarnated many times to protect dharma. Knowledge burns all karma to ashes. The wise see action in inaction and inaction in action.' },
+  { num:5, name:'Karma Sanyasa Yoga', sanskrit:'कर्मसन्यासयोग', meaning:'The Yoga of Renunciation', verses:29, desc:'Both renunciation and action lead to liberation. The true renunciant works with body, mind, and senses purified, abandoning attachment.' },
+  { num:6, name:'Dhyana Yoga', sanskrit:'ध्यानयोग', meaning:'The Yoga of Meditation', verses:47, desc:'The practice of meditation and self-control. The mind is restless, but it can be tamed through practice and detachment. A yogi sees the self in all beings.' },
+  { num:7, name:'Jnana Vijnana Yoga', sanskrit:'ज्ञानविज्ञानयोग', meaning:'The Yoga of Knowledge and Wisdom', verses:30, desc:'Krishna reveals his divine nature. All beings are strung on him like pearls on a thread. He is the taste in water, the light in the sun, the essence of all.' },
+  { num:8, name:'Akshara Brahma Yoga', sanskrit:'अक्षरब्रह्मयोग', meaning:'The Yoga of the Imperishable Brahman', verses:28, desc:'Those who remember Krishna at the moment of death come to him. The cosmos cycles through creation and dissolution. Beyond all of this is the imperishable.' },
+  { num:9, name:'Raja Vidya Raja Guhya Yoga', sanskrit:'राजविद्याराजगुह्ययोग', meaning:'The Yoga of the Royal Knowledge', verses:34, desc:'The supreme secret. Krishna pervades the universe yet remains beyond it. Even the lowliest devotee who worships with love reaches him.' },
+  { num:10, name:'Vibhuti Yoga', sanskrit:'विभूतियोग', meaning:'The Yoga of Divine Glories', verses:42, desc:'Krishna reveals his divine manifestations. He is the best of everything — among mountains, Meru; among rivers, Ganges; among warriors, Rama; among words, Om.' },
+  { num:11, name:'Vishvarupa Darshana Yoga', sanskrit:'विश्वरूपदर्शनयोग', meaning:'The Yoga of the Cosmic Form', verses:55, desc:'Arjuna asks to see Krishna\'s true form. Krishna reveals the Vishvarupa — a terrifying cosmic form containing all of creation, all beings, all time. "I am become Time, the destroyer of worlds."' },
+  { num:12, name:'Bhakti Yoga', sanskrit:'भक्तियोग', meaning:'The Yoga of Devotion', verses:20, desc:'Devotion to the personal god is the easiest path. Fix your mind on Krishna. If you cannot, then serve him. The devotee who is free from hatred, compassionate, and content — that one is dear to Krishna.' },
+  { num:13, name:'Kshetra Kshetragna Vibhaga Yoga', sanskrit:'क्षेत्रक्षेत्रज्ञविभागयोग', meaning:'The Yoga of the Field and the Knower', verses:35, desc:'The body is the field; the soul is the knower of the field. Understanding the distinction between the two is true knowledge. Prakriti does all action; the soul is the witness.' },
+  { num:14, name:'Gunatraya Vibhaga Yoga', sanskrit:'गुणत्रयविभागयोग', meaning:'The Yoga of the Three Gunas', verses:27, desc:'All of nature operates through three qualities — sattva (goodness), rajas (passion), and tamas (ignorance). Transcending all three leads to liberation.' },
+  { num:15, name:'Purushottama Yoga', sanskrit:'पुरुषोत्तमयोग', meaning:'The Yoga of the Supreme Being', verses:20, desc:'The universe is an inverted Ashvattha tree with roots above and branches below. Krishna is the Supreme Being, beyond both the perishable and the imperishable.' },
+  { num:16, name:'Daivasura Sampad Vibhaga Yoga', sanskrit:'दैवासुरसम्पद्विभागयोग', meaning:'The Yoga of Divine and Demonic Natures', verses:24, desc:'Two types of beings — the divine and the demonic. Fearlessness, purity, charity are divine. Hypocrisy, arrogance, anger are demonic. Choose the divine path.' },
+  { num:17, name:'Shraddhatraya Vibhaga Yoga', sanskrit:'श्रद्धात्रयविभागयोग', meaning:'The Yoga of the Three Divisions of Faith', verses:28, desc:'Faith, food, sacrifice, austerity, and charity each manifest in three forms according to the three gunas. Om Tat Sat — these three words designate Brahman.' },
+  { num:18, name:'Moksha Sanyasa Yoga', sanskrit:'मोक्षसन्यासयोग', meaning:'The Yoga of Liberation through Renunciation', verses:78, desc:'The final teaching. Renunciation is giving up the fruits of action, not action itself. Krishna\'s ultimate instruction: "Abandon all dharmas and surrender to me alone. I shall liberate you from all sin. Do not grieve."' }
+];
+
+const QUIZ_DATA = [
+  { q:'Who was Karna\'s biological mother?', options:['Gandhari','Kunti','Satyavati','Madri'], answer:1, cat:'Characters', explain:'Kunti invoked Surya before her marriage and bore Karna, whom she set adrift in a basket on the river.' },
+  { q:'How many Akshauhinis did the Kaurava army have?', options:['7','9','11','13'], answer:2, cat:'War', explain:'The Kaurava army consisted of 11 Akshauhinis against the Pandavas\' 7, giving them a significant numerical advantage.' },
+  { q:'Which divine weapon did Arjuna obtain from Lord Shiva?', options:['Brahmastra','Narayanastra','Pashupatastra','Vajra'], answer:2, cat:'Weapons', explain:'Arjuna pleased Shiva through penance and combat (the Kirata episode) and received the Pashupatastra, the most destructive weapon.' },
+  { q:'On which day of the war did Bhishma fall?', options:['Day 8','Day 10','Day 12','Day 14'], answer:1, cat:'War', explain:'Bhishma fought as commander for 10 days and fell on Day 10, pierced by Arjuna\'s arrows with Shikhandi as his shield.' },
+  { q:'What was Draupadi\'s unanswered question in the court?', options:['Why was she staked?','Did Yudhishthira have the right to stake her after losing himself?','Who would protect her?','Was the game fair?'], answer:1, cat:'Philosophy', explain:'This question stumped every elder in the court. If Yudhishthira had already lost himself, he was a slave — and a slave has no property to stake.' },
+  { q:'Who killed Abhimanyu?', options:['Karna alone','Drona alone','Six warriors together','Duryodhana'], answer:2, cat:'War', explain:'Abhimanyu was surrounded by Drona, Karna, Ashwatthama, Kripa, Kritavarma, and Shakuni. They attacked simultaneously, violating all rules of engagement.' },
+  { q:'What was Bhishma\'s original name?', options:['Devavrata','Shantanu','Gangadatta','Bhagadatta'], answer:0, cat:'Characters', explain:'He was born Devavrata. He earned the name Bhishma ("the terrible") from the gods after taking his fearsome oath of lifelong celibacy.' },
+  { q:'Which chapter of the Gita contains the Vishvarupa?', options:['Chapter 9','Chapter 11','Chapter 15','Chapter 18'], answer:1, cat:'Gita', explain:'Chapter 11 — Vishvarupa Darshana Yoga — contains the terrifying cosmic form revelation that overwhelms even Arjuna.' },
+  { q:'Who was the real father of Vidura?', options:['Vyasa','Bhishma','Parashurama','Drona'], answer:0, cat:'Characters', explain:'Vidura was born when Vyasa was summoned to father children for the Kuru dynasty. He was the son of Vyasa and a palace maid, and an incarnation of Dharma.' },
+  { q:'What animal accompanied Yudhishthira on the final walk to heaven?', options:['An eagle','A cow','A dog','A horse'], answer:2, cat:'Philosophy', explain:'A dog followed Yudhishthira on the Mahaprasthana. At heaven\'s gates, Indra asked him to leave it behind. Yudhishthira refused — the dog was Dharma in disguise.' },
+];
+
+const SHLOKAS = [
+  { sanskrit:'यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।\nअभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥', trans:'Whenever dharma declines and adharma rises, I manifest myself.', source:'Bhagavad Gita 4.7', context:'Krishna reveals to Arjuna that he incarnates in every age to restore cosmic balance.' },
+  { sanskrit:'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥', trans:'You have the right to action alone, never to its fruits. Let not the fruit of action be your motive, nor let your attachment be to inaction.', source:'Bhagavad Gita 2.47', context:'The most quoted verse of the Gita. Krishna establishes the foundation of Karma Yoga.' },
+  { sanskrit:'धर्मो रक्षति रक्षितः', trans:'Dharma protects those who protect it.', source:'Mahabharata, Vana Parva', context:'A principle that echoes throughout the epic — those who uphold righteousness are shielded by it in return.' },
+  { sanskrit:'नैनं छिन्दन्ति शस्त्राणि नैनं दहति पावकः।\nन चैनं क्लेदयन्त्यापो न शोषयति मारुतः॥', trans:'Weapons cannot cut the soul, fire cannot burn it, water cannot wet it, wind cannot dry it.', source:'Bhagavad Gita 2.23', context:'Krishna describes the eternal, indestructible nature of the Atman to dispel Arjuna\'s grief over killing.' },
+];
+
+// ============================================================
+// APP STATE
+// ============================================================
+let currentPage = 'home';
+let pageHistory = [];
+let quizState = { current: 0, score: 0, answered: false };
+let diceState = { round: 0, lost: [], playing: false };
+let selectedCharFilter = 'all';
+let selectedWarDay = 0;
+
+// ============================================================
+// ROUTER
+// ============================================================
+function navigate(page, params) {
+  if (page === currentPage && !params) return;
+  pageHistory.push(currentPage);
+  currentPage = page;
+  renderPage(page, params);
+  updateNav();
+  updateTopBar(page, params);
+}
+
+function goBack() {
+  if (pageHistory.length === 0) { navigate('home'); return; }
+  const prev = pageHistory.pop();
+  currentPage = prev;
+  renderPage(prev);
+  updateNav();
+  updateTopBar(prev);
+}
+
+function updateNav() {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.page === currentPage || 
+      (currentPage === 'gita' && item.dataset.page === 'more') ||
+      (currentPage === 'dice' && item.dataset.page === 'more') ||
+      (currentPage === 'quiz' && item.dataset.page === 'more') ||
+      (currentPage === 'astras' && item.dataset.page === 'more') ||
+      (currentPage === 'shloka' && item.dataset.page === 'more') ||
+      (currentPage === 'charDetail' && item.dataset.page === 'characters')
+    );
+  });
+}
+
+function updateTopBar(page, params) {
+  const bar = document.getElementById('topBar');
+  const title = document.getElementById('topTitle');
+  const back = document.getElementById('backBtn');
+  bar.classList.remove('transparent');
+  
+  const titles = { home:'', characters:'Characters', parvas:'The 18 Parvas', war:'Kurukshetra', gita:'Bhagavad Gita', dice:'The Dice Game', quiz:'Quiz Arena', more:'Explore', astras:'Divine Weapons', shloka:'Daily Shloka', charDetail:'' };
+  
+  if (page === 'home') { bar.classList.add('transparent'); title.textContent = ''; }
+  else if (page === 'charDetail' && params) { title.textContent = params.name; }
+  else { title.textContent = titles[page] || ''; }
+  
+  back.classList.toggle('visible', page !== 'home' && pageHistory.length > 0);
+}
+
+// ============================================================
+// RENDER ENGINE
+// ============================================================
+function renderPage(page, params) {
+  const container = document.getElementById('pageContainer');
+  const existing = container.querySelector('.page.active');
+  if (existing) { existing.classList.remove('active'); existing.classList.add('exit'); setTimeout(() => existing.remove(), 400); }
+  
+  const el = document.createElement('div');
+  el.className = 'page';
+  el.innerHTML = getPageHTML(page, params);
+  container.appendChild(el);
+  requestAnimationFrame(() => { requestAnimationFrame(() => { el.classList.add('active'); }); });
+  
+  if (page === 'war') setTimeout(() => initWarDay(), 100);
+  if (page === 'dice') setTimeout(() => initDice(), 100);
+  if (page === 'quiz') setTimeout(() => initQuiz(), 100);
+}
+
+function getPageHTML(page, params) {
+  switch(page) {
+    case 'home': return renderHome();
+    case 'characters': return renderCharacters();
+    case 'charDetail': return renderCharDetail(params);
+    case 'parvas': return renderParvas();
+    case 'war': return renderWar();
+    case 'gita': return renderGita();
+    case 'dice': return renderDice();
+    case 'quiz': return renderQuiz();
+    case 'more': return renderMore();
+    case 'astras': return renderAstras();
+    case 'shloka': return renderShloka();
+    default: return '<div style="padding:40px;text-align:center;color:var(--text-light);">Coming soon</div>';
+  }
+}
+
+// ============================================================
+// PAGE RENDERERS
+// ============================================================
+function renderHome() {
+  return `
+    <div class="home-hero">
+      <svg class="yantra" viewBox="0 0 400 400"><circle cx="200" cy="200" r="180" fill="none" stroke="rgba(184,134,11,0.4)" stroke-width="0.5"/><circle cx="200" cy="200" r="140" fill="none" stroke="rgba(184,134,11,0.3)" stroke-width="0.5"/><circle cx="200" cy="200" r="100" fill="none" stroke="rgba(184,134,11,0.3)" stroke-width="0.5"/><polygon points="200,40 360,280 40,280" fill="none" stroke="rgba(184,134,11,0.25)" stroke-width="0.5"/><polygon points="200,360 40,120 360,120" fill="none" stroke="rgba(184,134,11,0.25)" stroke-width="0.5"/><circle cx="200" cy="200" r="60" fill="none" stroke="rgba(184,134,11,0.35)" stroke-width="0.5"/><line x1="200" y1="20" x2="200" y2="380" stroke="rgba(184,134,11,0.15)" stroke-width="0.5"/><line x1="20" y1="200" x2="380" y2="200" stroke="rgba(184,134,11,0.15)" stroke-width="0.5"/></svg>
+      <div class="home-title-wrap">
+        <div class="home-sanskrit">महाभारतम्</div>
+        <div class="home-title">Mahābhārata</div>
+        <div class="home-subtitle">The greatest story ever told</div>
+      </div>
+      <div class="home-stats">
+        <div class="home-stat"><div class="home-stat-num">18</div><div class="home-stat-label">Parvas</div></div>
+        <div class="home-stat"><div class="home-stat-num">100K</div><div class="home-stat-label">Verses</div></div>
+        <div class="home-stat"><div class="home-stat-num">18</div><div class="home-stat-label">Days of War</div></div>
+      </div>
+    </div>
+    <div class="home-content">
+      <div class="section-header">Explore the epic</div>
+      <div class="home-grid">
+        <div class="home-grid-item" onclick="navigate('characters')">
+          <span class="home-grid-icon">⚔️</span>
+          <div class="home-grid-label">Characters</div>
+          <div class="home-grid-desc">100+ heroes, villains, and gods</div>
+        </div>
+        <div class="home-grid-item" onclick="navigate('parvas')">
+          <span class="home-grid-icon">📜</span>
+          <div class="home-grid-label">18 Parvas</div>
+          <div class="home-grid-desc">The complete story arc</div>
+        </div>
+        <div class="home-grid-item" onclick="navigate('war')">
+          <span class="home-grid-icon">🏹</span>
+          <div class="home-grid-label">The Great War</div>
+          <div class="home-grid-desc">18 days that changed everything</div>
+        </div>
+        <div class="home-grid-item" onclick="navigate('gita')">
+          <span class="home-grid-icon">🕉️</span>
+          <div class="home-grid-label">Bhagavad Gita</div>
+          <div class="home-grid-desc">Krishna's divine discourse</div>
+        </div>
+      </div>
+      
+      <div class="home-featured" onclick="navigate('dice')">
+        <div class="home-featured-eyebrow">Interactive experience</div>
+        <div class="home-featured-title">The Dice Game</div>
+        <div class="home-featured-desc">Play as Yudhishthira in the most devastating scene of the epic. Watch as everything is lost, one roll at a time.</div>
+        <span class="home-featured-cta">Enter the Sabha →</span>
+      </div>
+      
+      <div class="section-header">Daily wisdom</div>
+      ${renderShlokaCard()}
+      
+      <div style="height:20px"></div>
+      <div class="section-header">Quick access</div>
+      <div class="home-grid">
+        <div class="home-grid-item" onclick="navigate('astras')">
+          <span class="home-grid-icon">✨</span>
+          <div class="home-grid-label">Astras</div>
+          <div class="home-grid-desc">Divine weapons</div>
+        </div>
+        <div class="home-grid-item" onclick="navigate('quiz')">
+          <span class="home-grid-icon">🎯</span>
+          <div class="home-grid-label">Quiz Arena</div>
+          <div class="home-grid-desc">Test your knowledge</div>
+        </div>
+      </div>
+      <div style="height: 20px;"></div>
+    </div>
+  `;
+}
+
+function renderShlokaCard() {
+  const s = SHLOKAS[Math.floor(Date.now() / 86400000) % SHLOKAS.length];
+  return `<div class="shloka-card">
+    <div class="shloka-day">Verse of the day</div>
+    <div class="shloka-sanskrit">${s.sanskrit}</div>
+    <div class="shloka-trans">"${s.trans}"</div>
+    <div class="shloka-source">${s.source}</div>
+  </div>`;
+}
+
+function renderCharacters() {
+  const factions = ['all','pandava','kaurava','divine','neutral','sage'];
+  const filtered = selectedCharFilter === 'all' ? CHARACTERS : CHARACTERS.filter(c => c.faction === selectedCharFilter);
+  return `
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" placeholder="Search characters..." oninput="filterChars(this.value)" style="padding-left:40px">
+    </div>
+    <div class="pill-row">
+      ${factions.map(f => `<button class="pill ${selectedCharFilter===f?'active':''}" onclick="selectedCharFilter='${f}';navigate('characters')">${f==='all'?'All':f[0].toUpperCase()+f.slice(1)}</button>`).join('')}
+    </div>
+    <div id="charList">
+      ${filtered.map(c => `
+        <div class="card" onclick="navigate('charDetail',${JSON.stringify(c).replace(/"/g,'&quot;')})">
+          <div class="char-card">
+            <div class="char-avatar" style="background:${c.color}">${c.name[0]}</div>
+            <div class="char-info">
+              <div class="char-name">${c.name}</div>
+              <div class="char-title">${c.epithet.split(',')[0]}</div>
+              <span class="tag tag-${c.faction}">${c.faction}</span>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="height:20px"></div>
+  `;
+}
+
+function filterChars(query) {
+  const q = query.toLowerCase();
+  const list = document.getElementById('charList');
+  if (!list) return;
+  const filtered = CHARACTERS.filter(c => 
+    (selectedCharFilter === 'all' || c.faction === selectedCharFilter) &&
+    (c.name.toLowerCase().includes(q) || c.epithet.toLowerCase().includes(q))
+  );
+  list.innerHTML = filtered.map(c => `
+    <div class="card" onclick="navigate('charDetail',${JSON.stringify(c).replace(/"/g,'&quot;')})">
+      <div class="char-card">
+        <div class="char-avatar" style="background:${c.color}">${c.name[0]}</div>
+        <div class="char-info">
+          <div class="char-name">${c.name}</div>
+          <div class="char-title">${c.epithet.split(',')[0]}</div>
+          <span class="tag tag-${c.faction}">${c.faction}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCharDetail(c) {
+  if (!c) return '';
+  const skills = c.skills || {};
+  return `
+    <div class="char-detail-hero" style="background:linear-gradient(135deg, ${c.color}, ${c.color}88)">
+      <div class="char-detail-avatar" style="background:${c.color}">${c.name[0]}</div>
+      <div class="char-detail-name">${c.name}</div>
+      <div class="char-detail-epithet">${c.epithet}</div>
+    </div>
+    <div class="char-detail-body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+        <span class="tag tag-${c.faction}">${c.faction}</span>
+      </div>
+      
+      <div class="char-detail-section">
+        <h3>About</h3>
+        <p>${c.bio}</p>
+      </div>
+      
+      <div class="char-detail-section">
+        <h3>Lineage</h3>
+        <p><strong style="color:var(--saffron)">Parents:</strong> ${c.parents}</p>
+        <p style="margin-top:4px"><strong style="color:var(--saffron)">Teacher:</strong> ${c.guru}</p>
+      </div>
+      
+      ${c.weapons.length ? `<div class="char-detail-section">
+        <h3>Weapons</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${c.weapons.map(w => `<span style="padding:6px 14px;background:var(--parchment);border-radius:20px;font-size:12px;color:var(--text-mid);font-weight:500;">${w}</span>`).join('')}
+        </div>
+      </div>` : ''}
+      
+      ${Object.keys(skills).length ? `<div class="char-detail-section">
+        <h3>Battle prowess</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${Object.entries(skills).map(([k,v]) => `
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:65px;font-size:11px;color:var(--text-light);text-transform:capitalize;">${k}</span>
+              <div style="flex:1;height:6px;background:var(--parchment);border-radius:3px;overflow:hidden;">
+                <div style="width:${v*10}%;height:100%;background:${v>=8?'var(--saffron)':v>=6?'var(--gold)':'var(--text-light)'};border-radius:3px;transition:width 0.6s ease;"></div>
+              </div>
+              <span style="font-size:12px;font-weight:600;color:var(--text-mid);width:20px;text-align:right;">${v}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>` : ''}
+      
+      <div class="char-detail-section">
+        <h3>Key moments</h3>
+        ${(c.keyMoments||[]).map((m,i) => `
+          <div style="display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--saffron);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i+1}</div>
+            <p style="font-size:13px;color:var(--text-mid);line-height:1.5;padding-top:3px;">${m}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div style="height:20px"></div>
+  `;
+}
+
+function renderParvas() {
+  return `
+    <div class="section-sub">The Mahabharata is divided into 18 books, each called a Parva. Together they contain over 100,000 verses — the longest epic poem in human history.</div>
+    <div style="padding:0 20px 24px;">
+      ${PARVAS.map(p => `
+        <div class="card parva-card" style="margin:0 0 16px;padding:16px 16px 16px 32px;">
+          <div class="parva-dot"></div>
+          <div class="parva-num">Parva ${p.num}</div>
+          <div class="parva-name">${p.name}</div>
+          <div class="parva-meaning">${p.meaning}</div>
+          <div class="parva-desc">${p.desc}</div>
+          <div class="parva-meta">
+            <span>${p.chapters} chapters</span>
+            <span>${p.verses.toLocaleString()} verses</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderWar() {
+  const dayNums = WAR_DAYS.map(d => d.day);
+  return `
+    <div class="section-sub">18 days. 18 Akshauhinis. 4 million warriors. The bloodiest conflict in mythological history.</div>
+    <div class="war-day-selector" id="warDays">
+      ${Array.from({length:18},(_, i) => {
+        const hasData = dayNums.includes(i+1);
+        const isActive = WAR_DAYS[selectedWarDay]?.day === i+1;
+        return `<button class="war-day ${isActive?'active':''} ${hasData?'death':''}" onclick="selectWarDay(${i+1})" ${!hasData?'style="opacity:0.4"':''}>${i+1}</button>`;
+      }).join('')}
+    </div>
+    <div id="warContent">${renderWarDay(WAR_DAYS[selectedWarDay])}</div>
+    <div style="height:20px"></div>
+  `;
+}
+
+function renderWarDay(d) {
+  if (!d) return '<div style="padding:40px 20px;text-align:center;color:var(--text-light);font-size:14px;">Detailed events for this day coming soon.<br><br>Select a highlighted day to explore.</div>';
+  return `
+    <div style="padding:0 20px 12px;">
+      <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text-dark);">Day ${d.day}</div>
+      <div style="font-size:12px;color:var(--text-light);margin-top:4px;">Commander: ${d.commander_k} (K) vs ${d.commander_p} (P)</div>
+      <div style="font-size:12px;color:var(--text-light);">Formation: ${d.formation_k}</div>
+    </div>
+    <div style="margin:8px 20px 16px;padding:14px;background:var(--parchment);border-radius:12px;">
+      <div style="font-size:11px;font-weight:600;color:var(--text-light);margin-bottom:8px;">ARMY STRENGTH</div>
+      <div class="army-bar">
+        <span class="army-label pandava">Pandava</span>
+        <div class="army-track"><div class="army-fill pandava" style="width:${d.pandava_str}%"></div></div>
+        <span class="army-pct">${d.pandava_str}%</span>
+      </div>
+      <div class="army-bar">
+        <span class="army-label kaurava">Kaurava</span>
+        <div class="army-track"><div class="army-fill kaurava" style="width:${d.kaurava_str}%"></div></div>
+        <span class="army-pct">${d.kaurava_str}%</span>
+      </div>
+    </div>
+    ${d.events.map(e => `
+      <div class="war-event">
+        <div class="war-event-time">${e.time}</div>
+        <div class="war-event-title">${e.title}</div>
+        <div class="war-event-desc">${e.desc}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function selectWarDay(num) {
+  const idx = WAR_DAYS.findIndex(d => d.day === num);
+  if (idx === -1) { selectedWarDay = 0; }
+  else { selectedWarDay = idx; }
+  document.querySelectorAll('.war-day').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('warContent').innerHTML = renderWarDay(WAR_DAYS[selectedWarDay >= 0 ? selectedWarDay : 0]);
+}
+function initWarDay() { }
+
+function renderGita() {
+  return `
+    <div class="section-sub">700 verses across 18 chapters. Krishna's discourse to Arjuna on the battlefield of Kurukshetra — the philosophical heart of the Mahabharata.</div>
+    ${GITA_CHAPTERS.map(ch => `
+      <div class="gita-chapter">
+        <div class="gita-num">${ch.num}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="gita-ch-name">${ch.name}</div>
+          <div class="gita-ch-sanskrit">${ch.sanskrit}</div>
+          <div class="gita-ch-desc">${ch.desc}</div>
+          <div class="gita-ch-verses">${ch.verses} verses · ${ch.meaning}</div>
+        </div>
+      </div>
+    `).join('')}
+    <div style="height:20px"></div>
+  `;
+}
+
+// ============ DICE GAME ============
+const DICE_ROUNDS = [
+  { stake:'Your jewels and gold', lost:'Jewels & Gold', dialogue:{speaker:'Shakuni',quote:'A friendly game, O King. Surely you can spare a few trinkets?'} },
+  { stake:'Your chariots and horses', lost:'Chariots & Horses', dialogue:{speaker:'Vidura',quote:'Stop this madness, nephew! A king who gambles is no king at all.'} },
+  { stake:'Your armies and servants', lost:'Armies & Servants', dialogue:{speaker:'Shakuni',quote:'The dice fall as they must. Fortune favors the bold, Yudhishthira.'} },
+  { stake:'Your kingdom — Indraprastha', lost:'Indraprastha', dialogue:{speaker:'Dhritarashtra',quote:'...Let the game continue.'} },
+  { stake:'Your brother Nakula', lost:'Nakula', dialogue:{speaker:'Bhima',quote:'Brother, what have you done? You stake us like cattle!'} },
+  { stake:'Your brother Sahadeva', lost:'Sahadeva', dialogue:{speaker:'Shakuni',quote:'You still have three brothers left. Surely your luck will turn.'} },
+  { stake:'Your brother Arjuna', lost:'Arjuna', dialogue:{speaker:'Arjuna',quote:'I am staked? Then let it be so. Dharmaraja knows best.'} },
+  { stake:'Your brother Bhima', lost:'Bhima', dialogue:{speaker:'Bhima',quote:'When I am free of this, I will drink Duhshasana\'s blood. Remember my words.'} },
+  { stake:'Yourself', lost:'Yourself', dialogue:{speaker:'Shakuni',quote:'You have nothing left, O King. Nothing... except her.'} },
+  { stake:'Draupadi', lost:'Draupadi', dialogue:{speaker:'Draupadi',quote:'I ask this court one question: If the King had already lost himself, by what right did he stake me?'} },
+];
+
+function renderDice() {
+  diceState = { round: 0, lost: [], playing: true };
+  return `
+    <div class="dice-scene" id="diceScene">
+      <div class="dice-atmosphere">The great hall of Hastinapura grows quiet.<br>Shakuni smiles. The ivory dice gleam in torchlight.</div>
+      <div class="dice-stakes" id="diceStakes">
+        <div class="dice-round-label">ROUND 1 OF 10</div>
+        <div class="dice-stakes-text" id="diceStakeText">${DICE_ROUNDS[0].stake}</div>
+        <div class="dice-stakes-sub">You must wager to continue</div>
+      </div>
+      <div class="dice-area">
+        <div class="die" id="die1">?</div>
+        <div class="die" id="die2">?</div>
+      </div>
+      <button class="dice-btn" id="diceBtn" onclick="rollDice()">Cast the dice</button>
+      <div class="dice-dialogue" id="diceDialogue" style="display:none">
+        <div class="dice-speaker" id="diceSpeaker"></div>
+        <div class="dice-quote" id="diceQuote"></div>
+      </div>
+      <div class="dice-lost-list" id="diceLost"></div>
+    </div>
+  `;
+}
+
+function initDice() { }
+
+function rollDice() {
+  if (diceState.round >= DICE_ROUNDS.length) return;
+  const btn = document.getElementById('diceBtn');
+  btn.disabled = true;
+  const d1 = document.getElementById('die1');
+  const d2 = document.getElementById('die2');
+  d1.classList.add('rolling'); d2.classList.add('rolling');
+  d1.textContent = '?'; d2.textContent = '?';
+  
+  let rolls = 0;
+  const interval = setInterval(() => {
+    d1.textContent = Math.floor(Math.random()*6)+1;
+    d2.textContent = Math.floor(Math.random()*6)+1;
+    rolls++;
+    if (rolls > 8) {
+      clearInterval(interval);
+      d1.classList.remove('rolling'); d2.classList.remove('rolling');
+      // Shakuni always wins
+      d1.textContent = Math.floor(Math.random()*3)+1;
+      d2.textContent = Math.floor(Math.random()*3)+1;
+      completeDiceRound();
+    }
+  }, 80);
+}
+
+function completeDiceRound() {
+  const round = DICE_ROUNDS[diceState.round];
+  diceState.lost.push(round.lost);
+  
+  const dlg = document.getElementById('diceDialogue');
+  dlg.style.display = 'block';
+  document.getElementById('diceSpeaker').textContent = round.dialogue.speaker;
+  document.getElementById('diceQuote').textContent = round.dialogue.quote;
+  
+  document.getElementById('diceLost').innerHTML = diceState.lost.map(l => `<span class="dice-lost-item">${l}</span>`).join('');
+  
+  diceState.round++;
+  const btn = document.getElementById('diceBtn');
+  
+  if (diceState.round >= DICE_ROUNDS.length) {
+    btn.textContent = 'The game is over';
+    btn.disabled = true;
+    // Darken the scene further
+    document.getElementById('diceScene').style.background = 'linear-gradient(180deg, #0a0504 0%, #1a0a06 50%, #0a0504 100%)';
+  } else {
+    document.getElementById('diceStakes').querySelector('.dice-round-label').textContent = `ROUND ${diceState.round+1} OF 10`;
+    document.getElementById('diceStakeText').textContent = DICE_ROUNDS[diceState.round].stake;
+    btn.disabled = false;
+    btn.textContent = 'Cast the dice';
+    // Progressively darken
+    const darkness = 0.7 + (diceState.round * 0.03);
+    document.getElementById('diceScene').style.filter = `brightness(${1 - diceState.round * 0.05})`;
+  }
+}
+
+// ============ QUIZ ============
+function renderQuiz() {
+  quizState = { current: 0, score: 0, answered: false };
+  return `
+    <div class="quiz-header">
+      <div class="quiz-progress" id="quizProgress">
+        ${QUIZ_DATA.map((_, i) => `<div class="quiz-dot ${i===0?'current':''}"></div>`).join('')}
+      </div>
+      <div class="quiz-score">Score: <span id="quizScore">0</span>/${QUIZ_DATA.length}</div>
+    </div>
+    <div id="quizBody">${renderQuizQuestion()}</div>
+  `;
+}
+
+function renderQuizQuestion() {
+  const q = QUIZ_DATA[quizState.current];
+  if (!q) return `<div style="text-align:center;padding:40px 20px;">
+    <div style="font-size:48px;margin-bottom:16px;">🏆</div>
+    <div style="font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--text-dark);">Quiz Complete!</div>
+    <div style="font-size:16px;color:var(--text-mid);margin-top:8px;">You scored ${quizState.score} out of ${QUIZ_DATA.length}</div>
+    <button class="dice-btn" style="margin-top:24px;" onclick="navigate('quiz')">Play Again</button>
+  </div>`;
+  
+  return `
+    <div class="quiz-question-card">
+      <div class="quiz-category">${q.cat}</div>
+      <div class="quiz-question">${q.q}</div>
+    </div>
+    <div class="quiz-options" id="quizOptions">
+      ${q.options.map((o,i) => `<button class="quiz-option" onclick="answerQuiz(${i})">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-explanation" id="quizExplanation">${q.explain}</div>
+    <button class="quiz-next-btn" id="quizNext" onclick="nextQuizQuestion()">Next question →</button>
+  `;
+}
+
+function answerQuiz(idx) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+  const q = QUIZ_DATA[quizState.current];
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach((o, i) => {
+    if (i === q.answer) o.classList.add('correct');
+    if (i === idx && idx !== q.answer) o.classList.add('wrong');
+    o.style.pointerEvents = 'none';
+  });
+  if (idx === q.answer) quizState.score++;
+  document.getElementById('quizScore').textContent = quizState.score;
+  document.getElementById('quizExplanation').classList.add('visible');
+  document.getElementById('quizNext').classList.add('visible');
+  
+  const dots = document.querySelectorAll('.quiz-dot');
+  dots[quizState.current].classList.remove('current');
+  dots[quizState.current].classList.add(idx === q.answer ? 'correct' : 'wrong');
+  if (quizState.current + 1 < QUIZ_DATA.length) dots[quizState.current + 1].classList.add('current');
+}
+
+function nextQuizQuestion() {
+  quizState.current++;
+  quizState.answered = false;
+  document.getElementById('quizBody').innerHTML = renderQuizQuestion();
+}
+
+function initQuiz() { }
+
+// ============ MORE ============
+function renderMore() {
+  const items = [
+    { icon:'🕉️', label:'Bhagavad Gita', desc:'18 chapters of divine wisdom', page:'gita' },
+    { icon:'🎲', label:'The Dice Game', desc:'Live through the Sabha Parva', page:'dice' },
+    { icon:'✨', label:'Divine Weapons', desc:'Astras and celestial arms', page:'astras' },
+    { icon:'🎯', label:'Quiz Arena', desc:'Test your Mahabharata knowledge', page:'quiz' },
+    { icon:'📿', label:'Daily Shloka', desc:'A verse for every day', page:'shloka' },
+  ];
+  return `
+    <div class="section-header">Explore more</div>
+    <div class="section-sub">Dive deeper into the epic through interactive experiences, encyclopedias, and daily wisdom.</div>
+    ${items.map(it => `
+      <div class="card" onclick="navigate('${it.page}')" style="display:flex;gap:14px;align-items:center;">
+        <span style="font-size:28px;">${it.icon}</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-dark);">${it.label}</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:2px;">${it.desc}</div>
+        </div>
+        <span style="margin-left:auto;color:var(--text-light);font-size:18px;">→</span>
+      </div>
+    `).join('')}
+    <div style="height:20px"></div>
+  `;
+}
+
+// ============ ASTRAS ============
+function renderAstras() {
+  const astras = [
+    { name:'Brahmastra', origin:'Lord Brahma', tier:'supreme', icon:'☀️', color:'#FFE8A0', wielders:'Drona, Arjuna, Ashwatthama, Karna', desc:'The most feared weapon of mass destruction. Invoked through meditation, it never misses its mark. Can destroy entire armies. Using it against a non-equal opponent is considered a cosmic sin.' },
+    { name:'Pashupatastra', origin:'Lord Shiva', tier:'supreme', icon:'🔱', color:'#E3D4FF', wielders:'Arjuna', desc:'The weapon of annihilation obtained by Arjuna from Shiva in the Kirata episode. Capable of destroying creation itself. So terrible that Arjuna was forbidden from using it against ordinary warriors.' },
+    { name:'Narayanastra', origin:'Lord Vishnu', tier:'supreme', icon:'🌀', color:'#D4EFFF', wielders:'Drona, Ashwatthama', desc:'The weapon of Narayana (Vishnu). Launches millions of missiles that increase in intensity the more the target resists. The only counter: lay down your arms and surrender completely.' },
+    { name:'Sudarshana Chakra', origin:'Lord Vishnu', tier:'supreme', icon:'💫', color:'#FFE8A0', wielders:'Krishna', desc:'The divine discus of Vishnu, wielded by Krishna. A spinning wheel of cosmic fire that returns to the thrower after destroying its target. Cannot be stopped by any weapon.' },
+    { name:'Shakti of Indra', origin:'Lord Indra', tier:'divine', icon:'⚡', color:'#E3D4FF', wielders:'Karna', desc:'A one-use divine javelin given by Indra to Karna after he surrendered his kavach-kundal. Guaranteed to kill one person. Karna saved it for Arjuna but was forced to use it on Ghatotkacha.' },
+    { name:'Gandiva', origin:'Brahma → Soma → Varuna → Arjuna', tier:'divine', icon:'🏹', color:'#D4EFFF', wielders:'Arjuna', desc:'The celestial bow — not an astra but the greatest weapon in the epic. Created by Brahma, passed through gods for millennia. In Arjuna\'s hands it could fire thousands of arrows per second.' },
+    { name:'Vijaya Bow', origin:'Lord Shiva → Parashurama → Karna', tier:'divine', icon:'🏹', color:'#E3D4FF', wielders:'Karna', desc:'Shiva\'s personal bow, given to Parashurama, then to Karna. Said to guarantee victory to its wielder. The only bow that could match Gandiva.' },
+    { name:'Brahmashira', origin:'Lord Brahma', tier:'supreme', icon:'💀', color:'#FFE8A0', wielders:'Drona, Arjuna, Ashwatthama', desc:'Four times more powerful than the Brahmastra. When fired, it manifests as four heads of Brahma and destroys everything in a specific area, rendering it barren for 12 years.' },
+  ];
+  return `
+    <div class="section-sub">Celestial weapons wielded by gods and warriors. Each astra carries the power of the deity who created it.</div>
+    <div class="pill-row">
+      <button class="pill active">All</button>
+      <button class="pill">Supreme</button>
+      <button class="pill">Divine</button>
+      <button class="pill">Celestial</button>
+    </div>
+    ${astras.map(a => `
+      <div class="card">
+        <div class="astra-card">
+          <div class="astra-icon" style="background:${a.color}">${a.icon}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="astra-name">${a.name}</div>
+            <div class="astra-origin">Origin: ${a.origin}</div>
+            <div class="astra-desc">${a.desc}</div>
+            <div style="margin-top:6px;font-size:11px;color:var(--text-light);">Wielders: ${a.wielders}</div>
+            <span class="astra-tier tier-${a.tier}">${a.tier}</span>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+    <div style="height:20px"></div>
+  `;
+}
+
+// ============ SHLOKA ============
+function renderShloka() {
+  return `
+    <div class="section-sub">A carefully selected verse each day, with original Sanskrit, translation, and the story behind it.</div>
+    ${SHLOKAS.map((s,i) => `
+      <div style="margin:0 20px ${i<SHLOKAS.length-1?'20px':'0'};">
+        <div class="shloka-card" style="${i===0?'':'background:linear-gradient(135deg, var(--sacred-green), #1a3a2a);'}">
+          <div class="shloka-day">${s.source}</div>
+          <div class="shloka-sanskrit" style="font-size:18px;">${s.sanskrit}</div>
+          <div class="shloka-trans">"${s.trans}"</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;margin-top:12px;text-align:left;">${s.context}</div>
+        </div>
+      </div>
+    `).join('')}
+    <div style="height:20px"></div>
+  `;
+}
+
+// ============ THEME ============
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀' : '🌙';
+}
+
+// ============ INIT ============
+window.addEventListener('DOMContentLoaded', () => {
+  // Check system preference
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '🌙';
+  }
+  navigate('home');
+});
+</script>
+</body>
+</html>
