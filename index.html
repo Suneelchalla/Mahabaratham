@@ -275,6 +275,32 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .rd-nav-btn.disabled{opacity:0.3;pointer-events:none}
 .rd-read-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;background:var(--kumkum);color:#fff;border:none;border-radius:14px;font-family:var(--f-display);font-size:17px;font-weight:500;cursor:pointer;transition:all 0.3s;letter-spacing:0.02em;margin-bottom:20px}
 .rd-read-btn:active{transform:scale(0.97)}
+
+.tree-wrap{padding:12px 0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tree-wrap svg{display:block;margin:0 auto}
+.tree-wrap svg text{font-family:var(--f-body);fill:var(--text)}
+.tree-node{cursor:pointer;transition:opacity 0.3s}
+.tree-node:active{opacity:0.7}
+.tree-info{margin:0 20px;padding:16px;background:var(--bg-card);border:0.5px solid var(--border);border-radius:14px;animation:fadeUp 0.4s var(--ease) both}
+.tree-info-name{font-family:var(--f-display);font-size:18px;font-weight:500;color:var(--text);margin-bottom:4px}
+.tree-info-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+.yk-scene{min-height:100%;padding:40px 24px;position:relative;background:var(--bg-warm)}
+.yk-lake{text-align:center;margin:20px 0;padding:24px;background:linear-gradient(180deg,rgba(30,58,74,0.05) 0%,rgba(30,58,74,0.12) 100%);border-radius:20px;border:0.5px solid rgba(30,58,74,0.1)}
+.yk-brothers{display:flex;justify-content:center;gap:8px;margin:16px 0}
+.yk-bro{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-size:14px;font-weight:600;color:#fff;transition:all 0.5s var(--ease)}
+.yk-bro.fallen{opacity:0.2;transform:scale(0.7)}
+.yk-bro.revived{animation:scaleIn 0.5s var(--ease-s) both;box-shadow:0 0 12px rgba(74,123,90,0.3)}
+.yk-riddle{margin:20px 0;padding:22px;background:var(--bg-card);border:0.5px solid var(--border);border-radius:16px}
+.yk-q{font-family:var(--f-display);font-size:18px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:16px}
+.yk-opts{display:flex;flex-direction:column;gap:8px}
+.yk-opt{padding:12px 16px;background:var(--bg-card-alt);border:1.5px solid var(--border);border-radius:12px;font-size:13px;color:var(--text);cursor:pointer;transition:all 0.3s;font-family:var(--f-body);text-align:left;width:100%}
+.yk-opt:active{transform:scale(0.98)}
+.yk-opt.right{background:rgba(74,123,90,0.1);border-color:var(--tulasi);color:var(--tulasi)}
+.yk-opt.wrong{background:rgba(139,58,58,0.08);border-color:var(--rakta);color:var(--rakta)}
+.yk-result{text-align:center;padding:20px;margin-top:16px;background:var(--bg-card);border:0.5px solid var(--border);border-radius:14px;display:none}
+.yk-result.vis{display:block;animation:fadeUp 0.5s var(--ease) both}
+.yk-narr{font-family:var(--f-display);font-size:14px;color:var(--text2);line-height:1.7;font-style:italic;margin:16px 0;padding:14px;border-left:2px solid var(--gold);background:var(--gold-pale);border-radius:0 10px 10px 0}
 </style>
 </head>
 <body>
@@ -524,6 +550,54 @@ const STORY={
 18:[{t:'The Final Test',txt:'<p>At the gates of heaven, Indra himself appeared with a celestial chariot. "Come, Yudhishthira. You have earned your place. Enter heaven in your mortal body."</p><p>Yudhishthira moved toward the chariot. The dog followed.</p><p>Indra stopped him. "The dog cannot enter heaven. Leave it behind."</p><p>Yudhishthira refused. "This dog has followed me faithfully when everyone else fell. I will not abandon a loyal companion for my own comfort. If heaven has no place for loyalty, I have no need for heaven."</p><p>The dog transformed. It was Dharma — the god of righteousness, Yudhishthira\'s own divine father — in disguise. It had been the final test. And Yudhishthira had passed.</p><p>But heaven held one more surprise. Yudhishthira found Duryodhana sitting in glory. His brothers and Draupadi were nowhere to be seen. He was taken to hell — and there they were, suffering.</p><p>"I will stay here," Yudhishthira declared. "I choose hell with those I love over heaven with my enemies."</p><p>The illusion dissolved. It had been one last test — or perhaps a lesson. In truth, all of them were in heaven. The war, the suffering, the curses, the grief — all of it had been the play of karma and cosmic law. Everyone, in the end, had found their way home.</p><p>The story ends where it began: with the eternal question of what it means to live rightly in a world that makes righteousness nearly impossible.</p>'}],
 };
 
+const DYNASTY=[
+{id:'shantanu',nm:'Shantanu',y:0,x:50,c:'#4A7B5A',desc:'King of Hastinapura. Married Ganga, then Satyavati.'},
+{id:'ganga',nm:'Ganga',y:0,x:20,c:'#1E3A4A',desc:'River goddess. Mother of Bhishma (Devavrata).'},
+{id:'satyavati',nm:'Satyavati',y:0,x:80,c:'#8B3A3A',desc:'Fisherman\'s daughter. Her marriage condition caused Bhishma\'s oath.'},
+{id:'bhishma',nm:'Bhishma',y:1,x:20,c:'#4A7B5A',desc:'Son of Shantanu and Ganga. Took the oath of celibacy. Grandsire of the dynasty.'},
+{id:'vyasa',nm:'Vyasa',y:1,x:80,c:'#5A4570',desc:'Son of Satyavati and Parashara. Author of the Mahabharata. Fathered the next generation.'},
+{id:'dhritarashtra',nm:'Dhritarashtra',y:2,x:25,c:'#5C4A3A',desc:'Blind king. Son of Vyasa and Ambika. Father of 100 Kauravas.'},
+{id:'pandu',nm:'Pandu',y:2,x:50,c:'#6B5744',desc:'Pale king. Son of Vyasa and Ambalika. Father of the Pandavas. Cursed to die upon intimacy.'},
+{id:'vidura',nm:'Vidura',y:2,x:75,c:'#4A7B5A',desc:'Wisest advisor. Son of Vyasa and a palace maid. Incarnation of Dharma.'},
+{id:'gandhari',nm:'Gandhari',y:2,x:10,c:'#5A4570',desc:'Blindfolded queen. Wife of Dhritarashtra. Mother of 100 sons.'},
+{id:'kunti',nm:'Kunti',y:2,x:40,c:'#8B3A3A',desc:'Mother of Karna (by Surya), Yudhishthira, Bhima, and Arjuna.'},
+{id:'madri',nm:'Madri',y:2,x:60,c:'#8B3A3A',desc:'Pandu\'s second wife. Mother of Nakula and Sahadeva via the Ashwini twins.'},
+{id:'duryodhana',nm:'Duryodhana',y:3,x:10,c:'#8B3A3A',desc:'Eldest Kaurava. The primary antagonist.'},
+{id:'duhshasana',nm:'Duhshasana',y:3,x:22,c:'#8B3A3A',desc:'Second Kaurava. Dragged Draupadi by her hair.'},
+{id:'karna_d',nm:'Karna',y:3,x:33,c:'#C84B31',desc:'Firstborn of Kunti and Surya. Raised by charioteer. Fought for Kauravas.'},
+{id:'yudhishthira',nm:'Yudhishthira',y:3,x:43,c:'#5A4570',desc:'Eldest Pandava. Son of Dharma. The dharma king.'},
+{id:'bhima_d',nm:'Bhima',y:3,x:53,c:'#6B5744',desc:'Second Pandava. Son of Vayu. Strongest warrior.'},
+{id:'arjuna_d',nm:'Arjuna',y:3,x:63,c:'#1E3A4A',desc:'Third Pandava. Son of Indra. Greatest archer.'},
+{id:'nakula',nm:'Nakula',y:3,x:73,c:'#4A7B5A',desc:'Fourth Pandava. Son of Ashwini twins. Most handsome.'},
+{id:'sahadeva_d',nm:'Sahadeva',y:3,x:83,c:'#4A7B5A',desc:'Fifth Pandava. Son of Ashwini twins. Wisest.'},
+{id:'draupadi',nm:'Draupadi',y:3.5,x:53,c:'#8B3A3A',desc:'Wife of all five Pandavas. Born from sacred fire.'},
+{id:'abhimanyu_d',nm:'Abhimanyu',y:4,x:63,c:'#1E3A4A',desc:'Son of Arjuna and Subhadra. Killed in the Chakravyuha at age 16.'},
+{id:'ghatotkacha_d',nm:'Ghatotkacha',y:4,x:53,c:'#6B5744',desc:'Son of Bhima and Hidimbi. Demon warrior. Killed by Karna\'s Shakti.'},
+{id:'parikshit',nm:'Parikshit',y:5,x:63,c:'#1E3A4A',desc:'Son of Abhimanyu and Uttara. Last king of the dynasty. Saved by Krishna before birth.'},
+];
+const DYN_LINKS=[
+['shantanu','ganga','marriage'],['shantanu','satyavati','marriage'],['ganga','bhishma','child'],['satyavati','vyasa','child'],
+['vyasa','dhritarashtra','child'],['vyasa','pandu','child'],['vyasa','vidura','child'],
+['dhritarashtra','gandhari','marriage'],['pandu','kunti','marriage'],['pandu','madri','marriage'],
+['gandhari','duryodhana','child'],['gandhari','duhshasana','child'],
+['kunti','karna_d','child'],['kunti','yudhishthira','child'],['kunti','bhima_d','child'],['kunti','arjuna_d','child'],
+['madri','nakula','child'],['madri','sahadeva_d','child'],
+['arjuna_d','abhimanyu_d','child'],['bhima_d','ghatotkacha_d','child'],
+['abhimanyu_d','parikshit','child'],
+];
+
+const YAKSHA=[
+{q:'What makes the sun rise each day?',opts:['The horses of Surya','Brahman','The power of time','The prayers of sages'],a:1,explain:'It is Brahman — the supreme reality — that causes the sun to rise. All cosmic functions are expressions of Brahman.'},
+{q:'What is heavier than the earth?',opts:['Mount Meru','The ocean','A mother','The sky'],a:2,explain:'A mother is heavier than the earth. She carries the weight of her children\'s lives, joys, and sorrows.'},
+{q:'What is taller than the sky?',opts:['Mount Meru','A father','Brahma\'s realm','The cosmic tree'],a:1,explain:'A father is taller than the sky. He is the highest shelter his children know.'},
+{q:'What is faster than the wind?',opts:['Light','An arrow from Gandiva','The mind','Garuda in flight'],a:2,explain:'The mind is faster than the wind. It can travel to any place, any time, in an instant.'},
+{q:'What is more numerous than grass?',opts:['Stars in the sky','Grains of sand','The thoughts of man','Drops in the ocean'],a:2,explain:'The thoughts of man are more numerous than blades of grass. The mind never rests.'},
+{q:'What is the greatest dharma in the world?',opts:['Performing sacrifices','Speaking the truth','Kindness to all beings','Obeying one\'s teacher'],a:2,explain:'Kindness to all beings is the greatest dharma. It encompasses truth, sacrifice, and all other virtues.'},
+{q:'What, when renounced, makes one wealthy?',opts:['Gold','Desire','Kingdom','Pride'],a:1,explain:'When desire is renounced, one becomes truly wealthy. A man without desire needs nothing and therefore has everything.'},
+{q:'What is the greatest wonder in the world?',opts:['The creation of the universe','The power of the gods','That the living believe they are immortal despite seeing death daily','The depth of the ocean'],a:2,explain:'Every day, beings die all around us — yet the living believe they will live forever. There is no greater wonder than this. This is Yudhishthira\'s most famous answer.'},
+{q:'Which brother shall I revive?',opts:['Bhima — the strongest','Arjuna — the greatest warrior','Nakula — son of Madri','Sahadeva — the wisest'],a:2,explain:'Yudhishthira chose Nakula. "Kunti has me — her eldest. But Madri has no living son. Dharma demands I give fairness to both mothers." The Yaksha, who was Dharma himself in disguise, was so pleased that he revived all four brothers.'},
+];
+
 const AS=[
 {nm:'Brahmastra',orig:'Lord Brahma',tier:'supreme',icon:'☀️',d:'Never misses. Can destroy entire armies.'},
 {nm:'Pashupatastra',orig:'Lord Shiva',tier:'supreme',icon:'🔱',d:'Capable of destroying creation itself.'},
@@ -547,10 +621,10 @@ if('speechSynthesis' in window)speechSynthesis.getVoices();
 function go(p,pr){if(p===cur&&!pr)return;hist.push(cur);cur=p;render(p,pr);uNav();uTop(p,pr)}
 function goBack(){if(!hist.length){go('home');return}const p=hist.pop();cur=p;render(p);uNav();uTop(p)}
 function goToChar(nm){const c=C.find(x=>x.n===nm);if(c)go('charDetail',c)}
-function uNav(){document.querySelectorAll('.bnav-i').forEach(b=>{const pg=b.dataset.p;b.classList.toggle('on',pg===cur||(pg==='more'&&['gita','dice','quiz','astras','shloka'].includes(cur))||(pg==='characters'&&cur==='charDetail')||(pg==='parvas'&&['parvaDetail','read'].includes(cur)))})}
-function uTop(p,pr){const t=document.getElementById('topTitle'),b=document.getElementById('backBtn');const m={home:'',characters:'Heroes',parvas:'The 18 Parvas',parvaDetail:'',read:'',war:'Kurukshetra',gita:'Bhagavad Gita',dice:'The Dice Game',quiz:'Quiz',more:'Explore',astras:'Divine Weapons',shloka:'Sacred Verses',charDetail:''};t.textContent=(p==='charDetail'&&pr)?pr.n:(p==='parvaDetail'&&pr)?pr.nm:(p==='read'&&pr)?'Reading: '+P[pr.pn-1].nm:(m[p]||'');b.classList.toggle('hidden',p==='home')}
+function uNav(){document.querySelectorAll('.bnav-i').forEach(b=>{const pg=b.dataset.p;b.classList.toggle('on',pg===cur||(pg==='more'&&['gita','dice','quiz','astras','shloka','dynasty','yaksha'].includes(cur))||(pg==='characters'&&cur==='charDetail')||(pg==='parvas'&&['parvaDetail','read'].includes(cur)))})}
+function uTop(p,pr){const t=document.getElementById('topTitle'),b=document.getElementById('backBtn');const m={home:'',characters:'Heroes',parvas:'The 18 Parvas',parvaDetail:'',read:'',dynasty:'Dynasty Tree',yaksha:'Yaksha Prashna',war:'Kurukshetra',gita:'Bhagavad Gita',dice:'The Dice Game',quiz:'Quiz',more:'Explore',astras:'Divine Weapons',shloka:'Sacred Verses',charDetail:''};t.textContent=(p==='charDetail'&&pr)?pr.n:(p==='parvaDetail'&&pr)?pr.nm:(p==='read'&&pr)?'Reading: '+P[pr.pn-1].nm:(m[p]||'');b.classList.toggle('hidden',p==='home')}
 function render(p,pr){const w=document.getElementById('pw');const old=w.querySelector('.page.active');if(old){old.classList.remove('active');old.classList.add('exit');setTimeout(()=>old.remove(),600)}const el=document.createElement('div');el.className='page';el.innerHTML=html(p,pr);w.appendChild(el);requestAnimationFrame(()=>requestAnimationFrame(()=>{el.classList.add('active');initRv(el)}))}
-function html(p,pr){switch(p){case'home':return homeH();case'characters':return charsH();case'charDetail':return cdH(pr);case'parvas':return parvasH();case'parvaDetail':return pdH(pr);case'read':return readH(pr);case'war':return warH();case'gita':return gitaH();case'dice':return diceH();case'quiz':return quizH();case'more':return moreH();case'astras':return astrasH();case'shloka':return shlokaH();default:return''}}
+function html(p,pr){switch(p){case'home':return homeH();case'characters':return charsH();case'charDetail':return cdH(pr);case'parvas':return parvasH();case'parvaDetail':return pdH(pr);case'read':return readH(pr);case'dynasty':return treeH();case'yaksha':return yakshaH();case'war':return warH();case'gita':return gitaH();case'dice':return diceH();case'quiz':return quizH();case'more':return moreH();case'astras':return astrasH();case'shloka':return shlokaH();default:return''}}
 function initRv(c){const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('vis');o.unobserve(x.target)}})},{threshold:0.1,root:c});setTimeout(()=>c.querySelectorAll('.rv').forEach(el=>o.observe(el)),100)}
 
 // ===== LOTUS DIVIDER =====
@@ -579,9 +653,13 @@ ${lotus}
 <div class="shloka-c"><div class="shloka-lb">Verse of the day</div><div class="shloka-sk">${s.sk}</div><div class="shloka-tr">"${s.tr}"</div><div class="shloka-src">${s.src}</div>
 <div class="shloka-btns"><button class="abtn" onclick="event.stopPropagation();speakSk(\`${s.sk}\`)">🔊</button><button class="abtn" onclick="event.stopPropagation();speak('${s.tr.replace(/'/g,"\\'")}')">🗣️</button></div></div></div>
 <div class="sec-t rv" style="margin-top:8px">Quick access</div>
-<div class="hgrid rv" style="padding-bottom:24px">
+<div class="hgrid rv" style="padding-bottom:8px">
 <div class="hgi" onclick="go('astras')"><span class="hgi-icon">✨</span><div class="hgi-label">Astras</div><div class="hgi-desc">Divine weapons</div></div>
 <div class="hgi" onclick="go('quiz')"><span class="hgi-icon">🎯</span><div class="hgi-label">Quiz</div><div class="hgi-desc">Test your knowledge</div></div>
+</div>
+<div class="hgrid rv" style="padding-bottom:24px">
+<div class="hgi" onclick="go('dynasty')"><span class="hgi-icon">🌳</span><div class="hgi-label">Dynasty Tree</div><div class="hgi-desc">The Kuru lineage</div></div>
+<div class="hgi" onclick="go('yaksha')"><span class="hgi-icon">💀</span><div class="hgi-label">Yaksha Prashna</div><div class="hgi-desc">Riddles at the lake</div></div>
 </div>`}
 
 function charsH(){const fs=['all','pandava','kaurava','divine','neutral'];const li=cFilt==='all'?C:C.filter(c=>c.f===cFilt);return`
@@ -656,6 +734,118 @@ ${lotus}
 </div>
 </div>`}
 
+// ===== DYNASTY TREE =====
+let treeInfo=null;
+function treeH(){
+const W=680,rowH=90,padT=50,padB=60,H=padT+6*rowH+padB;
+let svg=`<div class="sec-t au">The Kuru Dynasty</div><div class="sec-s au d1">Tap any name to learn about them.</div>
+<div class="tree-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+// Draw links first
+DYN_LINKS.forEach(([from,to,type])=>{
+const a=DYNASTY.find(d=>d.id===from),b=DYNASTY.find(d=>d.id===to);if(!a||!b)return;
+const x1=a.x/100*W,y1=padT+a.y*rowH+16,x2=b.x/100*W,y2=padT+b.y*rowH-4;
+const color=type==='marriage'?'var(--kumkum)':'var(--earth-pale)';
+const dash=type==='marriage'?'4,4':'none';
+svg+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="0.8" stroke-dasharray="${dash}" opacity="0.5"/>`;
+});
+// Draw nodes
+DYNASTY.forEach(d=>{
+const x=d.x/100*W,y=padT+d.y*rowH;
+svg+=`<g class="tree-node" onclick="showTreeInfo('${d.id}')">
+<rect x="${x-36}" y="${y-12}" width="72" height="26" rx="13" fill="${d.c}" opacity="0.9"/>
+<text x="${x}" y="${y+3}" text-anchor="middle" font-size="10" font-weight="500" fill="#fff">${d.nm}</text></g>`;
+});
+svg+=`</svg></div><div id="treeInfoBox"></div><div style="height:20px"></div>`;
+return svg;
+}
+function showTreeInfo(id){
+const d=DYNASTY.find(x=>x.id===id);if(!d)return;
+const box=document.getElementById('treeInfoBox');
+const charLink=C.find(c=>c.n===d.nm)?`<button style="margin-top:10px;padding:8px 16px;background:var(--kumkum);color:#fff;border:none;border-radius:20px;font-size:12px;cursor:pointer;font-family:var(--f-body)" onclick="goToChar('${d.nm}')">View full profile →</button>`:'';
+box.innerHTML=`<div class="tree-info"><div class="tree-info-name">${d.nm}</div><div class="tree-info-desc">${d.desc}</div>${charLink}</div>`;
+box.scrollIntoView({behavior:'smooth',block:'nearest'});
+if(audioOn)speak(d.nm+'. '+d.desc);
+}
+
+// ===== YAKSHA PRASHNA =====
+let ykState={q:0,correct:0,done:false,brothers:['N','S','A','B']};
+function yakshaH(){
+ykState={q:0,correct:0,done:false,brothers:['N','S','A','B']};
+return`<div class="yk-scene">
+<div style="text-align:center;animation:fadeUp 0.8s var(--ease) both">
+<div style="font-family:var(--f-display);font-size:24px;font-weight:500;color:var(--text);margin-bottom:6px">The Yaksha Prashna</div>
+<div style="font-size:13px;color:var(--text2)">Answer the riddles. Save your brothers.</div>
+</div>
+<div class="yk-narr" style="animation:fadeUp 0.8s 0.2s var(--ease) both">A cursed lake in the forest. One by one, your brothers drank without answering and fell dead. Now you stand before the water, and a voice speaks from the mist...</div>
+<div class="yk-lake" style="animation:fadeUp 0.8s 0.4s var(--ease) both">
+<div style="font-size:11px;color:var(--nila);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Your brothers</div>
+<div class="yk-brothers" id="ykBros">
+<div class="yk-bro fallen" id="ykB0" style="background:var(--nila)" title="Nakula">N</div>
+<div class="yk-bro fallen" id="ykB1" style="background:var(--nila)" title="Sahadeva">S</div>
+<div class="yk-bro fallen" id="ykB2" style="background:var(--nila)" title="Arjuna">A</div>
+<div class="yk-bro fallen" id="ykB3" style="background:var(--kumkum)" title="Bhima">B</div>
+</div>
+<div style="font-size:11px;color:var(--text3)" id="ykStatus">All four brothers lie dead</div>
+</div>
+<div id="ykBody">${ykQH()}</div>
+</div>`}
+
+function ykQH(){
+const qi=ykState.q;
+if(qi>=YAKSHA.length){
+return`<div class="yk-result vis" style="animation:fadeUp 0.6s var(--ease) both">
+<div style="font-size:40px;margin-bottom:12px">🕉️</div>
+<div style="font-family:var(--f-display);font-size:22px;font-weight:500;color:var(--tulasi)">The Yaksha reveals himself</div>
+<div style="font-size:14px;color:var(--text2);margin-top:10px;line-height:1.7">"I am Dharma — your father. You answered with wisdom and chose with righteousness. All your brothers are restored to life."</div>
+<div style="font-size:13px;color:var(--text3);margin-top:12px">You answered ${ykState.correct} of ${YAKSHA.length} correctly.</div>
+<button class="dice-btn" style="margin-top:20px" onclick="go('yaksha')">Play again</button>
+</div>`}
+const y=YAKSHA[qi];
+return`<div class="yk-riddle" style="animation:scaleIn 0.5s var(--ease) both">
+<div style="font-size:10px;color:var(--kumkum);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Riddle ${qi+1} of ${YAKSHA.length}</div>
+<div class="yk-q">"${y.q}"</div>
+<div class="yk-opts" id="ykOpts">${y.opts.map((o,i)=>`<button class="yk-opt" onclick="ansYk(${i})">${o}</button>`).join('')}</div>
+</div>`}
+
+function ansYk(i){
+if(ykState.done)return;ykState.done=true;
+const y=YAKSHA[ykState.q];
+document.querySelectorAll('.yk-opt').forEach((o,j)=>{
+if(j===y.a)o.classList.add('right');
+if(j===i&&i!==y.a)o.classList.add('wrong');
+o.style.pointerEvents='none';
+});
+const isRight=i===y.a;
+if(isRight)ykState.correct++;
+// Revive a brother for correct answers (first 4)
+if(isRight&&ykState.correct<=4){
+const bro=document.getElementById('ykB'+(ykState.correct-1));
+if(bro){bro.classList.remove('fallen');bro.classList.add('revived')}
+const statusEl=document.getElementById('ykStatus');
+const alive=ykState.correct;
+statusEl.textContent=alive===4?'All brothers restored!':alive+' of 4 brothers revived';
+}
+// Show explanation
+const expDiv=document.createElement('div');
+expDiv.className='yk-narr';expDiv.style.marginTop='12px';
+expDiv.innerHTML=(isRight?'<span style="color:var(--tulasi);font-weight:600">Correct.</span> ':'<span style="color:var(--rakta);font-weight:600">The Yaksha shakes his head.</span> ')+y.explain;
+document.getElementById('ykOpts').after(expDiv);
+if(audioOn)speak(y.explain);
+// Next button
+setTimeout(()=>{
+const btn=document.createElement('button');
+btn.className='rd-nav-btn primary';btn.style.marginTop='14px';btn.style.width='100%';
+btn.textContent=ykState.q<YAKSHA.length-1?'Next riddle →':'See the revelation';
+btn.onclick=()=>{ykState.q++;ykState.done=false;document.getElementById('ykBody').innerHTML=ykQH();
+if(ykState.q>=YAKSHA.length){
+// Revive all brothers at the end
+for(let b=0;b<4;b++){const el=document.getElementById('ykB'+b);if(el){el.classList.remove('fallen');el.classList.add('revived')}}
+document.getElementById('ykStatus').textContent='All brothers restored — Dharma reveals himself!';
+}};
+expDiv.after(btn);
+},600);
+}
+
 function warH(){const dns=WD.map(d=>d.day);return`<div class="sec-s">18 days. 4 million warriors.</div>
 <div class="wdays">${Array.from({length:18},(_,i)=>{const h=dns.includes(i+1),a=WD[wdi]?.day===i+1;return`<button class="wd ${a?'on':''} ${h?'has':''}" onclick="pickW(${i+1})">${i+1}</button>`}).join('')}</div>
 <div id="wBody">${wdH(WD[wdi])}</div><div style="height:20px"></div>`}
@@ -683,7 +873,7 @@ return`<div class="qqc as"><div class="qcat">${q.cat}</div><div class="qq">${q.q
 function ansQ(i){if(qSt.d)return;qSt.d=true;const q=QZ[qSt.c];document.querySelectorAll('.qo').forEach((o,j)=>{if(j===q.a)o.classList.add('ok');if(j===i&&i!==q.a)o.classList.add('no');o.style.pointerEvents='none'});if(i===q.a)qSt.s++;document.getElementById('qSc').textContent=qSt.s;document.getElementById('qE').classList.add('vis');document.getElementById('qN').classList.add('vis');if(audioOn)speak(q.ex);const dots=document.querySelectorAll('.qd');dots[qSt.c].classList.remove('cur');dots[qSt.c].classList.add(i===q.a?'ok':'no');if(qSt.c+1<QZ.length)dots[qSt.c+1].classList.add('cur')}
 function nxtQ(){qSt.c++;qSt.d=false;document.getElementById('qB').innerHTML=qqH()}
 
-function moreH(){const items=[{i:'🕉️',l:'Bhagavad Gita',d:'18 chapters of wisdom',p:'gita'},{i:'🎲',l:'The Dice Game',d:'Live through the Sabha Parva',p:'dice'},{i:'✨',l:'Divine Weapons',d:'Astras and celestial arms',p:'astras'},{i:'🎯',l:'Quiz',d:'Test your knowledge',p:'quiz'},{i:'📿',l:'Sacred Verses',d:'Shlokas with audio',p:'shloka'}];return`<div class="sec-t au">Explore more</div>${lotus}<div class="sec-s au d1">Interactive experiences, encyclopedias, and daily wisdom.</div>
+function moreH(){const items=[{i:'🕉️',l:'Bhagavad Gita',d:'18 chapters of wisdom',p:'gita'},{i:'🎲',l:'The Dice Game',d:'Live through the Sabha Parva',p:'dice'},{i:'🌳',l:'Dynasty Tree',d:'The Kuru family lineage',p:'dynasty'},{i:'💀',l:'Yaksha Prashna',d:'Answer the riddles, save your brothers',p:'yaksha'},{i:'✨',l:'Divine Weapons',d:'Astras and celestial arms',p:'astras'},{i:'🎯',l:'Quiz',d:'Test your knowledge',p:'quiz'},{i:'📿',l:'Sacred Verses',d:'Shlokas with audio',p:'shloka'}];return`<div class="sec-t au">Explore more</div>${lotus}<div class="sec-s au d1">Interactive experiences, encyclopedias, and daily wisdom.</div>
 ${items.map((it,i)=>`<div class="card rv" style="transition-delay:${i*.06}s" onclick="go('${it.p}')"><div class="more-row"><div class="more-ic">${it.i}</div><div><div class="more-lb">${it.l}</div><div class="more-ds">${it.d}</div></div><span class="more-arr">→</span></div></div>`).join('')}<div style="height:20px"></div>`}
 
 function astrasH(){return`<div class="sec-s">Celestial weapons wielded by gods and warriors.</div>
