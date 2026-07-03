@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Mahābhārata — The Living Epic</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#C84B31">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mahābhārata">
+<meta name="application-name" content="Mahābhārata">
+<meta name="description" content="Explore the greatest epic ever told — read all 18 parvas, meet 29 heroes, play interactive games.">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -883,10 +892,88 @@ function shlokaH(){return`<div class="sec-s">Sacred verses with audio narration.
 ${SH.map((s,i)=>`<div class="rv" style="transition-delay:${i*.08}s;margin-bottom:16px"><div class="shloka-c"><div class="shloka-lb">${s.src}</div><div class="shloka-sk">${s.sk}</div><div class="shloka-tr">"${s.tr}"</div><div class="shloka-src">${s.src}</div><div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;margin-top:12px;text-align:left;position:relative">${s.ctx}</div>
 <div class="shloka-btns"><button class="abtn" onclick="event.stopPropagation();speakSk(\`${s.sk}\`)">🔊</button><button class="abtn" onclick="event.stopPropagation();speak('${s.tr.replace(/'/g,"\\'")}')">🗣️</button></div></div></div>`).join('')}<div style="height:20px"></div>`}
 
+// ===== PWA: Generate Icons & Register SW =====
+function generateIcon(size){
+  const c=document.createElement('canvas');c.width=size;c.height=size;const x=c.getContext('2d');
+  const r=size*0.21;
+  // Background
+  x.fillStyle='#F8F5F0';
+  x.beginPath();x.roundRect(0,0,size,size,size*0.21);x.fill();
+  // Circles
+  x.strokeStyle='#E2DCD2';x.lineWidth=size*0.004;
+  [0.31,0.23,0.16].forEach(s=>{x.beginPath();x.arc(size/2,size*0.47,size*s,0,Math.PI*2);x.stroke()});
+  // Lotus petals
+  const cx=size/2,cy=size*0.47,pr=size*0.1,pw=size*0.043;
+  for(let i=0;i<8;i++){
+    x.save();x.translate(cx,cy);x.rotate(i*Math.PI/4);
+    x.fillStyle=i%2?'rgba(200,75,49,0.75)':'rgba(200,75,49,0.9)';
+    x.beginPath();x.ellipse(0,-pr,pw,pr*1.04,0,0,Math.PI*2);x.fill();
+    x.restore();
+  }
+  // Center
+  x.fillStyle='#B8860B';x.beginPath();x.arc(cx,cy,size*0.047,0,Math.PI*2);x.fill();
+  x.fillStyle='#F8F5F0';x.beginPath();x.arc(cx,cy,size*0.023,0,Math.PI*2);x.fill();
+  // Text
+  x.fillStyle='#2C2418';x.font=`600 ${size*0.07}px Georgia,serif`;x.textAlign='center';
+  x.fillText('MAHĀBHĀRATA',size/2,size*0.82);
+  x.fillStyle='#9E8F7F';x.font=`${size*0.032}px sans-serif`;x.letterSpacing=`${size*0.008}px`;
+  x.fillText('THE LIVING EPIC',size/2,size*0.89);
+  return c;
+}
+
+function savePngIcons(){
+  try{
+    [192,512].forEach(s=>{
+      const c=generateIcon(s);
+      c.toBlob(blob=>{
+        if(!blob)return;
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');a.href=url;a.download=`icon-${s}.png`;
+      },'image/png');
+    });
+  }catch(e){}
+}
+
+// Install prompt
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  showInstallBtn();
+});
+
+function showInstallBtn(){
+  if(document.getElementById('installBar'))return;
+  const bar=document.createElement('div');bar.id='installBar';
+  bar.style.cssText='position:fixed;bottom:calc(var(--nav-h) + 8px);left:12px;right:12px;max-width:456px;margin:0 auto;padding:14px 18px;background:var(--bg-card);border:0.5px solid var(--border);border-radius:14px;display:flex;align-items:center;gap:12px;z-index:300;box-shadow:0 8px 30px rgba(44,36,24,0.12);animation:fadeUp 0.5s var(--ease) both';
+  bar.innerHTML=`
+    <div style="width:40px;height:40px;border-radius:10px;background:var(--kumkum);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="font-size:20px;filter:brightness(10)">🪷</span></div>
+    <div style="flex:1"><div style="font-family:var(--f-display);font-size:14px;font-weight:500;color:var(--text)">Install Mahābhārata</div><div style="font-size:11px;color:var(--text3);margin-top:1px">Add to home screen for the best experience</div></div>
+    <button onclick="installApp()" style="padding:8px 18px;background:var(--kumkum);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f-body)">Install</button>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text4);font-size:18px;cursor:pointer;padding:4px">×</button>
+  `;
+  document.body.appendChild(bar);
+}
+
+async function installApp(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  const result=await deferredPrompt.userChoice;
+  deferredPrompt=null;
+  const bar=document.getElementById('installBar');
+  if(bar)bar.remove();
+}
+
+window.addEventListener('appinstalled',()=>{
+  const bar=document.getElementById('installBar');if(bar)bar.remove();
+  deferredPrompt=null;
+});
+
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded',()=>{
   if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');
   if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+  savePngIcons();
   go('home');
 });
 </script>
