@@ -1,43 +1,27 @@
 {
-  "id": "mahabharata-living-epic",
-  "name": "Mahābhārata — The Living Epic",
-  "short_name": "Mahābhārata",
-  "description": "Explore the greatest epic ever told. Read all 18 parvas, meet 29 heroes, play the Dice Game, and answer the Yaksha's riddles.",
-  "start_url": "./",
+  "id": "mahabharata-app",
+  "name": "Mahabharata - The Living Epic",
+  "short_name": "Mahabharata",
+  "description": "Explore the greatest epic ever told.",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F8F5F0",
   "theme_color": "#C84B31",
-  "categories": ["education", "books", "entertainment"],
   "lang": "en",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    },
-    {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Read the Epic",
-      "short_name": "Read",
-      "url": "./"
-    },
-    {
-      "name": "Yaksha Prashna",
-      "short_name": "Yaksha",
-      "url": "./"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
