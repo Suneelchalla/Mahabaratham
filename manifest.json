@@ -1,48 +1,43 @@
 {
+  "id": "mahabharata-living-epic",
   "name": "Mahābhārata — The Living Epic",
   "short_name": "Mahābhārata",
-  "description": "Explore the greatest epic ever told. Read all 18 parvas, meet 29 heroes, play the Dice Game, answer the Yaksha's riddles, and trace the Kuru dynasty.",
-  "start_url": "./mahabharata.html",
+  "description": "Explore the greatest epic ever told. Read all 18 parvas, meet 29 heroes, play the Dice Game, and answer the Yaksha's riddles.",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F8F5F0",
   "theme_color": "#C84B31",
   "categories": ["education", "books", "entertainment"],
   "lang": "en",
-  "dir": "ltr",
   "icons": [
     {
       "src": "icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "type": "image/svg+xml"
     },
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "Read the Epic",
       "short_name": "Read",
-      "url": "./mahabharata.html#parvas",
-      "description": "Start reading the 18 Parvas"
+      "url": "./"
     },
     {
       "name": "Yaksha Prashna",
       "short_name": "Yaksha",
-      "url": "./mahabharata.html#yaksha",
-      "description": "Play the riddle game"
+      "url": "./"
     }
   ]
 }
