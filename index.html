@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Mahabharata — The Living Epic</title>
+<title>Mahābhārata — The Living Epic</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#C84B31">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Mahabharata">
-<meta name="application-name" content="Mahabharata">
+<meta name="apple-mobile-web-app-title" content="Mahābhārata">
+<meta name="application-name" content="Mahābhārata">
 <meta name="description" content="Explore the greatest epic ever told — read all 18 parvas, meet 29 heroes, play interactive games.">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -632,7 +632,8 @@ function goBack(){if(!hist.length){go('home');return}const p=hist.pop();cur=p;re
 function goToChar(nm){const c=C.find(x=>x.n===nm);if(c)go('charDetail',c)}
 function uNav(){document.querySelectorAll('.bnav-i').forEach(b=>{const pg=b.dataset.p;b.classList.toggle('on',pg===cur||(pg==='more'&&['gita','dice','quiz','astras','shloka','dynasty','yaksha'].includes(cur))||(pg==='characters'&&cur==='charDetail')||(pg==='parvas'&&['parvaDetail','read'].includes(cur)))})}
 function uTop(p,pr){const t=document.getElementById('topTitle'),b=document.getElementById('backBtn');const m={home:'',characters:'Heroes',parvas:'The 18 Parvas',parvaDetail:'',read:'',dynasty:'Dynasty Tree',yaksha:'Yaksha Prashna',war:'Kurukshetra',gita:'Bhagavad Gita',dice:'The Dice Game',quiz:'Quiz',more:'Explore',astras:'Divine Weapons',shloka:'Sacred Verses',charDetail:''};t.textContent=(p==='charDetail'&&pr)?pr.n:(p==='parvaDetail'&&pr)?pr.nm:(p==='read'&&pr)?'Reading: '+P[pr.pn-1].nm:(m[p]||'');b.classList.toggle('hidden',p==='home')}
-function render(p,pr){const w=document.getElementById('pw');const old=w.querySelector('.page.active');if(old){old.classList.remove('active');old.classList.add('exit');setTimeout(()=>old.remove(),600)}const el=document.createElement('div');el.className='page';el.innerHTML=html(p,pr);w.appendChild(el);void el.offsetHeight;requestAnimationFrame(()=>{el.classList.add('active');initRv(el)})}
+let firstRender=true;
+function render(p,pr){const w=document.getElementById('pw');const old=w.querySelector('.page.active');if(old){old.classList.remove('active');old.classList.add('exit');setTimeout(()=>old.remove(),600)}const el=document.createElement('div');el.innerHTML=html(p,pr);if(firstRender){el.className='page active';w.appendChild(el);firstRender=false;initRv(el)}else{el.className='page';w.appendChild(el);void el.offsetHeight;requestAnimationFrame(()=>{el.classList.add('active');initRv(el)})}}
 function html(p,pr){switch(p){case'home':return homeH();case'characters':return charsH();case'charDetail':return cdH(pr);case'parvas':return parvasH();case'parvaDetail':return pdH(pr);case'read':return readH(pr);case'dynasty':return treeH();case'yaksha':return yakshaH();case'war':return warH();case'gita':return gitaH();case'dice':return diceH();case'quiz':return quizH();case'more':return moreH();case'astras':return astrasH();case'shloka':return shlokaH();default:return''}}
 function initRv(c){const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('vis');o.unobserve(x.target)}})},{threshold:0.1,root:c});setTimeout(()=>c.querySelectorAll('.rv').forEach(el=>o.observe(el)),100)}
 
@@ -644,7 +645,7 @@ function homeH(){const s=SH[Math.floor(Date.now()/86400000)%SH.length];return`
 <div class="home-hero">
 <svg class="hero-motif" viewBox="0 0 400 400" fill="none" stroke="var(--earth-pale)" stroke-width="0.5"><circle cx="200" cy="200" r="190"/><circle cx="200" cy="200" r="140"/><circle cx="200" cy="200" r="90"/><polygon points="200,30 370,290 30,290"/><polygon points="200,370 30,110 370,110"/></svg>
 <div class="hero-sk">महाभारतम्</div>
-<div class="hero-title">Mahabharata</div>
+<div class="hero-title">Mahābhārata</div>
 <div class="hero-sub">The greatest story ever told</div>
 <div class="hero-stats"><div><div class="hs-n">18</div><div class="hs-l">Parvas</div></div><div><div class="hs-n">100K</div><div class="hs-l">Verses</div></div><div><div class="hs-n">18</div><div class="hs-l">Days of war</div></div></div>
 </div>
