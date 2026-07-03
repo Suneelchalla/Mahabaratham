@@ -942,13 +942,9 @@ window.addEventListener('appinstalled',()=>{
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded',()=>{
   if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');
-  if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js',{scope:'./'})
-    .then(r=>console.log('SW registered',r.scope))
-    .catch(e=>console.error('SW failed',e));
-  }
+  if('speechSynthesis' in window)try{speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}catch(e){}
   go('home');
+  setTimeout(()=>{try{if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{})}catch(e){}},2000);
 });
 </script>
 </body>
