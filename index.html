@@ -882,7 +882,21 @@ return`<div class="qqc as"><div class="qcat">${q.cat}</div><div class="qq">${q.q
 function ansQ(i){if(qSt.d)return;qSt.d=true;const q=QZ[qSt.c];document.querySelectorAll('.qo').forEach((o,j)=>{if(j===q.a)o.classList.add('ok');if(j===i&&i!==q.a)o.classList.add('no');o.style.pointerEvents='none'});if(i===q.a)qSt.s++;document.getElementById('qSc').textContent=qSt.s;document.getElementById('qE').classList.add('vis');document.getElementById('qN').classList.add('vis');if(audioOn)speak(q.ex);const dots=document.querySelectorAll('.qd');dots[qSt.c].classList.remove('cur');dots[qSt.c].classList.add(i===q.a?'ok':'no');if(qSt.c+1<QZ.length)dots[qSt.c+1].classList.add('cur')}
 function nxtQ(){qSt.c++;qSt.d=false;document.getElementById('qB').innerHTML=qqH()}
 
-function moreH(){const items=[{i:'🕉️',l:'Bhagavad Gita',d:'18 chapters of wisdom',p:'gita'},{i:'🎲',l:'The Dice Game',d:'Live through the Sabha Parva',p:'dice'},{i:'🌳',l:'Dynasty Tree',d:'The Kuru family lineage',p:'dynasty'},{i:'💀',l:'Yaksha Prashna',d:'Answer the riddles, save your brothers',p:'yaksha'},{i:'✨',l:'Divine Weapons',d:'Astras and celestial arms',p:'astras'},{i:'🎯',l:'Quiz',d:'Test your knowledge',p:'quiz'},{i:'📿',l:'Sacred Verses',d:'Shlokas with audio',p:'shloka'}];return`<div class="sec-t au">Explore more</div>${lotus}<div class="sec-s au d1">Interactive experiences, encyclopedias, and daily wisdom.</div>
+function moreH(){const items=[{i:'🕉️',l:'Bhagavad Gita',d:'18 chapters of wisdom',p:'gita'},{i:'🎲',l:'The Dice Game',d:'Live through the Sabha Parva',p:'dice'},{i:'🌳',l:'Dynasty Tree',d:'The Kuru family lineage',p:'dynasty'},{i:'💀',l:'Yaksha Prashna',d:'Answer the riddles, save your brothers',p:'yaksha'},{i:'✨',l:'Divine Weapons',d:'Astras and celestial arms',p:'astras'},{i:'🎯',l:'Quiz',d:'Test your knowledge',p:'quiz'},{i:'📿',l:'Sacred Verses',d:'Shlokas with audio',p:'shloka'}];
+const isIos=/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+const isAndroid=/android/.test(navigator.userAgent.toLowerCase());
+const isInstalled=window.matchMedia('(display-mode:standalone)').matches||navigator.standalone;
+let installHtml='';
+if(!isInstalled){
+  if(isIos){
+    installHtml=`<div class="card" style="border-color:var(--kumkum);border-width:1px"><div class="more-row"><div class="more-ic" style="background:var(--kumkum)"><span style="font-size:22px;filter:brightness(10)">🪷</span></div><div><div class="more-lb">Install this app</div><div class="more-ds" style="line-height:1.5;margin-top:4px">Tap the <strong>Share</strong> button (box with arrow) at the bottom of Safari, then tap <strong>"Add to Home Screen"</strong></div></div></div></div>`;
+  } else if(isAndroid){
+    installHtml=`<div class="card" style="border-color:var(--kumkum);border-width:1px" onclick="if(deferredPrompt){installApp()}"><div class="more-row"><div class="more-ic" style="background:var(--kumkum)"><span style="font-size:22px;filter:brightness(10)">🪷</span></div><div><div class="more-lb">Install this app</div><div class="more-ds" style="line-height:1.5;margin-top:4px">${deferredPrompt?'Tap here to install':'Tap the <strong>⋮ menu</strong> in Chrome → <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>'}</div></div></div></div>`;
+  } else {
+    installHtml=`<div class="card" style="border-color:var(--kumkum);border-width:1px" onclick="if(deferredPrompt){installApp()}"><div class="more-row"><div class="more-ic" style="background:var(--kumkum)"><span style="font-size:22px;filter:brightness(10)">🪷</span></div><div><div class="more-lb">Install this app</div><div class="more-ds" style="line-height:1.5;margin-top:4px">${deferredPrompt?'Tap here to install':'Look for the install icon (⊕) in your browser\'s address bar'}</div></div></div></div>`;
+  }
+}return`<div class="sec-t au">Explore more</div>${lotus}<div class="sec-s au d1">Interactive experiences, encyclopedias, and daily wisdom.</div>
+${installHtml}
 ${items.map((it,i)=>`<div class="card rv" style="transition-delay:${i*.06}s" onclick="go('${it.p}')"><div class="more-row"><div class="more-ic">${it.i}</div><div><div class="more-lb">${it.l}</div><div class="more-ds">${it.d}</div></div><span class="more-arr">→</span></div></div>`).join('')}<div style="height:20px"></div>`}
 
 function astrasH(){return`<div class="sec-s">Celestial weapons wielded by gods and warriors.</div>
@@ -891,48 +905,6 @@ ${AS.map((a,i)=>`<div class="card rv" style="transition-delay:${i*.05}s"><div cl
 function shlokaH(){return`<div class="sec-s">Sacred verses with audio narration.</div>
 ${SH.map((s,i)=>`<div class="rv" style="transition-delay:${i*.08}s;margin-bottom:16px"><div class="shloka-c"><div class="shloka-lb">${s.src}</div><div class="shloka-sk">${s.sk}</div><div class="shloka-tr">"${s.tr}"</div><div class="shloka-src">${s.src}</div><div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;margin-top:12px;text-align:left;position:relative">${s.ctx}</div>
 <div class="shloka-btns"><button class="abtn" onclick="event.stopPropagation();speakSk(\`${s.sk}\`)">🔊</button><button class="abtn" onclick="event.stopPropagation();speak('${s.tr.replace(/'/g,"\\'")}')">🗣️</button></div></div></div>`).join('')}<div style="height:20px"></div>`}
-
-// ===== PWA: Generate Icons & Register SW =====
-function generateIcon(size){
-  const c=document.createElement('canvas');c.width=size;c.height=size;const x=c.getContext('2d');
-  const r=size*0.21;
-  // Background
-  x.fillStyle='#F8F5F0';
-  x.beginPath();x.roundRect(0,0,size,size,size*0.21);x.fill();
-  // Circles
-  x.strokeStyle='#E2DCD2';x.lineWidth=size*0.004;
-  [0.31,0.23,0.16].forEach(s=>{x.beginPath();x.arc(size/2,size*0.47,size*s,0,Math.PI*2);x.stroke()});
-  // Lotus petals
-  const cx=size/2,cy=size*0.47,pr=size*0.1,pw=size*0.043;
-  for(let i=0;i<8;i++){
-    x.save();x.translate(cx,cy);x.rotate(i*Math.PI/4);
-    x.fillStyle=i%2?'rgba(200,75,49,0.75)':'rgba(200,75,49,0.9)';
-    x.beginPath();x.ellipse(0,-pr,pw,pr*1.04,0,0,Math.PI*2);x.fill();
-    x.restore();
-  }
-  // Center
-  x.fillStyle='#B8860B';x.beginPath();x.arc(cx,cy,size*0.047,0,Math.PI*2);x.fill();
-  x.fillStyle='#F8F5F0';x.beginPath();x.arc(cx,cy,size*0.023,0,Math.PI*2);x.fill();
-  // Text
-  x.fillStyle='#2C2418';x.font=`600 ${size*0.07}px Georgia,serif`;x.textAlign='center';
-  x.fillText('MAHĀBHĀRATA',size/2,size*0.82);
-  x.fillStyle='#9E8F7F';x.font=`${size*0.032}px sans-serif`;x.letterSpacing=`${size*0.008}px`;
-  x.fillText('THE LIVING EPIC',size/2,size*0.89);
-  return c;
-}
-
-function savePngIcons(){
-  try{
-    [192,512].forEach(s=>{
-      const c=generateIcon(s);
-      c.toBlob(blob=>{
-        if(!blob)return;
-        const url=URL.createObjectURL(blob);
-        const a=document.createElement('a');a.href=url;a.download=`icon-${s}.png`;
-      },'image/png');
-    });
-  }catch(e){}
-}
 
 // Install prompt
 let deferredPrompt=null;
@@ -946,21 +918,20 @@ function showInstallBtn(){
   const bar=document.createElement('div');bar.id='installBar';
   bar.style.cssText='position:fixed;bottom:calc(var(--nav-h) + 8px);left:12px;right:12px;max-width:456px;margin:0 auto;padding:14px 18px;background:var(--bg-card);border:0.5px solid var(--border);border-radius:14px;display:flex;align-items:center;gap:12px;z-index:300;box-shadow:0 8px 30px rgba(44,36,24,0.12);animation:fadeUp 0.5s var(--ease) both';
   bar.innerHTML=`
-    <div style="width:40px;height:40px;border-radius:10px;background:var(--kumkum);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="font-size:20px;filter:brightness(10)">🪷</span></div>
-    <div style="flex:1"><div style="font-family:var(--f-display);font-size:14px;font-weight:500;color:var(--text)">Install Mahābhārata</div><div style="font-size:11px;color:var(--text3);margin-top:1px">Add to home screen for the best experience</div></div>
+    <div style="width:40px;height:40px;border-radius:10px;background:var(--kumkum);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px">🪷</div>
+    <div style="flex:1"><div style="font-family:var(--f-display);font-size:14px;font-weight:500;color:var(--text)">Install app</div><div style="font-size:11px;color:var(--text3);margin-top:1px">Add to home screen</div></div>
     <button onclick="installApp()" style="padding:8px 18px;background:var(--kumkum);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f-body)">Install</button>
-    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text4);font-size:18px;cursor:pointer;padding:4px">×</button>
-  `;
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text4);font-size:18px;cursor:pointer;padding:4px">×</button>`;
   document.body.appendChild(bar);
 }
 
 async function installApp(){
-  if(!deferredPrompt)return;
-  deferredPrompt.prompt();
-  const result=await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  const bar=document.getElementById('installBar');
-  if(bar)bar.remove();
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt=null;
+  }
+  const bar=document.getElementById('installBar');if(bar)bar.remove();
 }
 
 window.addEventListener('appinstalled',()=>{
@@ -972,8 +943,11 @@ window.addEventListener('appinstalled',()=>{
 window.addEventListener('DOMContentLoaded',()=>{
   if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');
   if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
-  savePngIcons();
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js',{scope:'./'})
+    .then(r=>console.log('SW registered',r.scope))
+    .catch(e=>console.error('SW failed',e));
+  }
   go('home');
 });
 </script>
